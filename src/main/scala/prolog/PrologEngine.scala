@@ -46,9 +46,12 @@ object PrologEngine {
         val solveInfo: SolveInfo = engine.solveNext()
         if (solveInfo.isSuccess()) {
           Option(SolutionSet(solveInfo, lastGoal.get))
+        } else {
+          Option.empty
         }
+      } else {
+        Option.empty
       }
-      Option.empty
     }
 
     def loadTheory(stream: InputStream): Unit = engine.setTheory(new Theory(stream))

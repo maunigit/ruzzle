@@ -43,6 +43,12 @@ object PredicateBuilder {
 
   implicit def anyValToString(anyVal: AnyVal): String = anyVal.toString()
 
+  implicit def charToVariable(charVariable: Char): Variable = Variable(charVariable)
+
+  implicit def anyValToConstant(constant: AnyVal): Constant = Constant(constant.toString())
+
+  implicit def stringToConstant(variable: String): Constant = Constant(variable)
+
 }
 
 

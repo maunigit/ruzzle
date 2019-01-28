@@ -20,3 +20,4 @@ case class Variable(private val _value: Char) extends LogicTerm {
   override def value(): String = _value.toString().toUpperCase()
 }
 
+
