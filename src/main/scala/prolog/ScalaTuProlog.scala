@@ -1,0 +1,5 @@
+package prolog
+
+class ScalaTuProlog {
+
+}
