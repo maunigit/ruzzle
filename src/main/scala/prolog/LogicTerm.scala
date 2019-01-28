@@ -20,4 +20,13 @@ case class Variable(private val _value: Char) extends LogicTerm {
   override def value(): String = _value.toString().toUpperCase()
 }
 
+case class LogicList(private val terms: LogicTerm*) extends LogicTerm {
 
+  override def value(): String = {
+    if(terms.isEmpty) {
+      "[]"
+    } else {
+      "[" + terms.map(logicTerm => logicTerm.value()).mkString(",") + "]"
+    }
+  }
+}

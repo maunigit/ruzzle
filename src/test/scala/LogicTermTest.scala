@@ -1,5 +1,5 @@
 import org.scalatest._
-import prolog.{Constant, Predicate, PredicateBuilder, Variable}
+import prolog._
 import prolog.PredicateBuilder._
 
 class LogicTermTest extends FlatSpec with Matchers {
@@ -29,6 +29,12 @@ class LogicTermTest extends FlatSpec with Matchers {
     a [IllegalArgumentException] should be thrownBy {
       val constant: Variable = Variable('5')
     }
+  }
+
+  "The list" should "be correctly filled" in {
+    val builder: PredicateBuilder = PredicateBuilder("myPredicate") += 5 += LogicList("alfa", "beta", "gamma")
+    val predicate: Predicate = builder.create()
+    assert(predicate.toString() == "myPredicate(5,[alfa,beta,gamma])")
   }
 
 }
