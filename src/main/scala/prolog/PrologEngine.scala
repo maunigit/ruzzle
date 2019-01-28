@@ -7,6 +7,7 @@ import alice.tuprolog.{Prolog, SolveInfo, Theory}
 trait PrologEngine {
 
   def goal(predicate: Predicate): Option[SolutionSet]
+  def +=(predicate: Predicate): Boolean
   def hasOpenAlternatives(): Boolean
   def getNextAlternative(): Option[SolutionSet]
 }
@@ -23,12 +24,14 @@ object PrologEngine {
 
   private class PrologEngineImpl extends PrologEngine {
 
+    val goalPlaceholder: String = "%s."
+    val assertPlaceholder: String = "asserta(%s)."
     val engine: Prolog = new Prolog()
     var lastGoal: Option[Predicate] = Option.empty
 
     override def goal(predicate: Predicate): Option[SolutionSet] = {
       lastGoal = Option(predicate)
-      val solveInfo: SolveInfo = engine.solve(predicate.toString())
+      val solveInfo: SolveInfo = engine.solve(goalPlaceholder.format(predicate.toString()))
       if (solveInfo.isSuccess()) {
         Option(SolutionSet(solveInfo, predicate))
       } else {
@@ -49,6 +52,11 @@ object PrologEngine {
     }
 
     def loadTheory(stream: InputStream): Unit = engine.setTheory(new Theory(stream))
+
+    override def +=(predicate: Predicate): Boolean = {
+      val solveInfo: SolveInfo = engine.solve(assertPlaceholder.format(predicate.toString()))
+      if(solveInfo.isSuccess()) true else false
+    }
 
   }
 }

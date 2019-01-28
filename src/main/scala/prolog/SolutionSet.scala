@@ -18,11 +18,12 @@ object SolutionSet {
 
     override def apply(variable: Variable): String = {
       val exactVariable: String = variable.value()
-      val bindVariable: Optional[Var] = solveInfo.getBindingVars().stream().filter(bindingVar => bindingVar.getName() == exactVariable).findFirst()
+      val bindVariable: Optional[Var] = solveInfo.getBindingVars().stream().filter(bindingVar => bindingVar.getName().equals(exactVariable)).findFirst()
       if(bindVariable.isPresent()) {
         bindVariable.get().getTerm().toString()
+      } else {
+        throw new IllegalArgumentException("The variable is undefined.")
       }
-      throw new IllegalArgumentException("The variable is undefined.")
     }
 
     override def isEmpty(): Boolean = !predicate.containVariables()
