@@ -2,7 +2,7 @@ import org.scalatest._
 import prolog.{Constant, Predicate, PredicateBuilder, Variable}
 import prolog.PredicateBuilder._
 
-class LogicElementsTest extends FlatSpec with Matchers {
+class LogicTermTest extends FlatSpec with Matchers {
 
   "An predicate with Variables and Constants" should "be created" in {
     val builder: PredicateBuilder = PredicateBuilder("myPredicate") += Variable('x') += Constant(55) += Variable('Y')
