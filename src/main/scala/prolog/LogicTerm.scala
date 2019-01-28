@@ -1,11 +1,11 @@
 package prolog
 
-trait LogicElement {
+trait LogicTerm {
 
   def value(): String
 }
 
-case class Constant(val _value: String) extends LogicElement {
+case class Constant(private val _value: String) extends LogicTerm {
 
   require(!_value.isEmpty(), "The value cannot be empty")
 
@@ -13,7 +13,7 @@ case class Constant(val _value: String) extends LogicElement {
 
 }
 
-case class Variable(val _value: Char) extends LogicElement {
+case class Variable(private val _value: Char) extends LogicTerm {
 
   require(_value.isLetter, "The variable must be a single letter")
 
