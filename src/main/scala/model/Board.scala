@@ -18,4 +18,5 @@ object Board{
 
     override def isPresent(word: String): Boolean = ???
   }
+
 }
