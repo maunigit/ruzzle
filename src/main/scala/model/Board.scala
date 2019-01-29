@@ -17,19 +17,20 @@ object Board{
 
   private class BoardImpl(val generator: () => Char, override val size: Int) extends Board {
 
-    val theory: InputStream = getClass().getResourceAsStream("/board.pl")
+    val theory: InputStream = getClass.getResourceAsStream("/board.pl")
     val engine: PrologEngine = PrologEngine.loadTheory(theory)
     buildBoard()
 
     def buildBoard() = {
       for(i <- 0 until size; j <- 0 until size) {
-        val builder:PredicateBuilder = PredicateBuilder("cell") += i += j += generator().toString()
+        val builder:PredicateBuilder = PredicateBuilder("cell") += i += j += Constant(generator())
         engine += builder.create()
       }
     }
 
     override def isPresent(word: String): Boolean = {
-      val builder:PredicateBuilder = PredicateBuilder("is_present") += LogicList(word.toLowerCase().toCharArray().map(letter => Constant(letter)))
+      val chars: LogicList = LogicList(word.toLowerCase().map(letter => Constant(letter)))
+      val builder:PredicateBuilder = PredicateBuilder("is_present") += chars
       engine.goal(builder.create()).isDefined
     }
 
@@ -38,10 +39,21 @@ object Board{
       for(i <- 0 until size; j <- 0 until size) {
         val builder:PredicateBuilder = PredicateBuilder("cell") += i += j += 'K'
         val solution: SolutionSet = engine.goal(builder.create()).get
-        matrix(i)(j) = solution('X').toCharArray()(0)
+        matrix(i)(j) = solution('K').toCharArray()(0)
       }
       matrix
     }
+
+    override def toString: String = {
+      val board: Array[Array[Char]] = matrix()
+      var description: String = ""
+      for(i <- 0 until size; j <- 0 until size) {
+        description += board(i)(j)
+        if(j == size - 1 ) description += "\n"
+      }
+      description
+    }
+
   }
 
 }

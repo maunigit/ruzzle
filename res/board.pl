@@ -18,5 +18,3 @@ is_present(I, J, [K|T]) :- near(I, J, X, Y, K), is_present(X, Y, T).
 % Check if a list contains near values
 is_present([K|T]) :- cell(I, J, K), is_present(I, J, T), !.
 
-% Insert a new cell in the board
-add_cell(X, Y, K) :- asserta(cell(X, Y, K)).

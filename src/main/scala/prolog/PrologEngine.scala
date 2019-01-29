@@ -1,6 +1,6 @@
 package prolog
 
-import java.io.{File, FileInputStream, InputStream}
+import java.io.InputStream
 
 import alice.tuprolog.{Prolog, SolveInfo, Theory}
 
@@ -56,10 +56,13 @@ object PrologEngine {
 
     def loadTheory(stream: InputStream): Unit = engine.setTheory(new Theory(stream))
 
+
     override def +=(predicate: Predicate): Boolean = {
       val solveInfo: SolveInfo = engine.solve(assertPlaceholder.format(predicate.toString()))
       if(solveInfo.isSuccess()) true else false
     }
+
+    override def toString: String = engine.getTheory().toString()
 
   }
 }

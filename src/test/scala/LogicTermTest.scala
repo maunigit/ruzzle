@@ -32,7 +32,7 @@ class LogicTermTest extends FlatSpec with Matchers {
   }
 
   "The list" should "be correctly filled" in {
-    val builder: PredicateBuilder = PredicateBuilder("myPredicate") += 5 += LogicList("alfa", "beta", "gamma")
+    val builder: PredicateBuilder = PredicateBuilder("myPredicate") += 5 += LogicList(Seq("alfa", "beta", "gamma"))
     val predicate: Predicate = builder.create()
   }
 
