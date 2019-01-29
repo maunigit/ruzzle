@@ -17,6 +17,8 @@ object Board{
 
   private class BoardImpl(val generator: () => Char, override val size: Int) extends Board {
 
+    require(size > 0, "The size of the board must be greater than zero.")
+
     val theory: InputStream = getClass.getResourceAsStream("/board.pl")
     val engine: PrologEngine = PrologEngine.loadTheory(theory)
     buildBoard()
@@ -29,7 +31,7 @@ object Board{
     }
 
     override def isPresent(word: String): Boolean = {
-      val chars: LogicList = LogicList(word.toLowerCase().map(letter => Constant(letter)))
+      val chars: LogicTerm = LogicList.from(word.toLowerCase().map(letter => Constant(letter)))
       val builder:PredicateBuilder = PredicateBuilder("is_present") += chars
       engine.goal(builder.create()).isDefined
     }

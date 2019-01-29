@@ -20,13 +20,22 @@ case class Variable(private val _value: Char) extends LogicTerm {
   override def value(): String = _value.toString().toUpperCase()
 }
 
-case class LogicList(private val terms: Iterable[LogicTerm]) extends LogicTerm {
+object LogicList {
 
-  override def value(): String = {
-    if(terms.isEmpty) {
-      "[]"
-    } else {
-      "[" + terms.map(logicTerm => logicTerm.value()).mkString(",") + "]"
+  def apply(terms: LogicTerm*): LogicTerm = LogicList(terms.toIterable)
+
+  def from(terms: Iterable[LogicTerm]): LogicTerm = LogicList(terms)
+
+  private case class LogicList(private val terms: Iterable[LogicTerm]) extends LogicTerm {
+
+    override def value(): String = {
+      if(terms.isEmpty) {
+        "[]"
+      } else {
+        "[" + terms.map(logicTerm => logicTerm.value()).mkString(",") + "]"
+      }
     }
   }
+
 }
+
