@@ -1,10 +1,6 @@
-import java.io.File
-
 import org.scalatest._
 import prolog.{Constant, PredicateBuilder, PrologEngine, Variable}
 import prolog.PredicateBuilder._
-
-import scala.io.Source
 
 class PrologEngineTest extends FlatSpec with Matchers {
 

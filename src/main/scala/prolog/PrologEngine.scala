@@ -16,9 +16,9 @@ object PrologEngine {
 
   def apply(): PrologEngine = new PrologEngineImpl()
 
-  def loadTheory(file: File): PrologEngine = {
+  def loadTheory(theory: InputStream): PrologEngine = {
     val prologEngine: PrologEngineImpl = new PrologEngineImpl()
-    prologEngine.loadTheory(new FileInputStream(file))
+    prologEngine.loadTheory(theory)
     prologEngine
   }
 
