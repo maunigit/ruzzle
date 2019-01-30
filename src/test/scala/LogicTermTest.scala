@@ -13,7 +13,7 @@ class LogicTermTest extends FlatSpec with Matchers {
   }
 
   "The terms" should "be without spaces" in {
-    val builder: PredicateBuilder = PredicateBuilder("my Predicate") += Variable('x') += Constant("my Const") += Variable('Y')
+    val builder: PredicateBuilder = PredicateBuilder("my Predicate") += Variable('x') += Constant("My Const") += Variable('Y')
     val predicate: Predicate = builder.create()
     assert(predicate(1).value() == "myConst")
     assert(predicate.toString() == "myPredicate(X,myConst,Y)")

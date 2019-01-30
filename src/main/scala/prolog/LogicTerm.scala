@@ -9,7 +9,9 @@ case class Constant(private val _value: String) extends LogicTerm {
 
   require(!_value.isEmpty(), "The value cannot be empty")
 
-  override def value(): String = _value.toString().filterNot(character => character.isWhitespace).toString()
+  override def value(): String = _value.toString().filterNot(character => character.isWhitespace).toList match {
+    case h::t => h.toLower.toString() + t.mkString
+  }
 
 }
 
