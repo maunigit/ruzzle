@@ -1,4 +1,4 @@
-import model.RandomGenerator
+import model.{Board, RandomGenerator}
 import org.scalatest._
 
 class GeneratorTest extends FlatSpec {
