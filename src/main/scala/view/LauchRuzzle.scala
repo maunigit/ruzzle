@@ -1,3 +1,5 @@
+package view
+
 import javafx.application.Application
 
 object LauchRuzzle extends App {
