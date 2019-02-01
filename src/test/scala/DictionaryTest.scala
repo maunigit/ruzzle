@@ -24,14 +24,8 @@ class DictionaryTest extends FlatSpec {
 
   "The dictionary" should "catch right synonymous" in {
     val obese:Word = Word("obese", WordTag.Adjective)
-    val rotund:Word = Word("rotund", WordTag.Adjective)
-    assert(Dictionary.areSynonyms(obese, rotund))
-  }
-
-  "The dictionary" should "catch wrong synonymous" in {
-    val dog:Word = Word("dog", WordTag.Noun)
-    val cat:Word = Word("cate", WordTag.Noun)
-    assert(!Dictionary.areSynonyms(dog, cat))
+    assert(Dictionary.synset(obese).contains("rotund"))
+    assert(!Dictionary.synset(obese).contains("thin"))
   }
 
 }

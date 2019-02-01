@@ -5,7 +5,6 @@ import java.net.URL
 import scala.collection.JavaConverters._
 import edu.mit.jwi
 import edu.mit.jwi.IDictionary
-import edu.mit.jwi.item.IWordID
 import edu.mit.jwi.morph.WordnetStemmer
 
 object Dictionary {
@@ -24,15 +23,15 @@ object Dictionary {
     }
   }
 
-  def areSynonyms(word1: Word, word2: Word): Boolean = if(isPresent(word1) && isPresent(word2)) {
-    meanings(word1).foreach(wordID => dictionary.getWord(wordID).getSynset().getWords()
-      .forEach(word => {println(word.getLemma()); if(word.getLemma().equals(lemma(word2).get)) return true}))
-    false
-  } else false
-
-  private def meanings(word: Word): List[IWordID] = if(isPresent(word)) {
-    dictionary.getIndexWord(lemma(word).get, word.tag).getWordIDs().asScala.toList
-  } else List()
+  def synset(word: Word): Set[String] = if(isPresent(word)) {
+    var synset: Set[String] = Set()
+    dictionary.getIndexWord(lemma(word).get, word.tag)
+      .getWordIDs().asScala.toList
+      .foreach(wordId => dictionary.getWord(wordId)
+        .getSynset().getWords()
+          .forEach(wordId => synset = synset + wordId.getLemma()))
+    synset
+  } else Set()
 
 }
 
