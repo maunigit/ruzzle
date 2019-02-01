@@ -1,5 +1,3 @@
-import java.io.File
-
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader}
@@ -49,4 +47,15 @@ class DashboardController {
   @FXML
   var searchedWordsListView  : ListView[VBox] = _
 
+  @FXML def closeProgram(event: ActionEvent): Unit = {
+  }
+
+  @FXML def newGameMatch(event: ActionEvent): Unit = {
+  }
+
+  @FXML def searchWord(event: ActionEvent): Unit = {
+  }
+
+  @FXML def showRank(event: ActionEvent): Unit = {
+  }
 }
