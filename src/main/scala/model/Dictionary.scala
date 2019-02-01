@@ -1,42 +1,38 @@
 package model
 
 import java.net.URL
-import scala.collection.JavaConverters._
 
+import scala.collection.JavaConverters._
 import edu.mit.jwi
 import edu.mit.jwi.IDictionary
+import edu.mit.jwi.item.IWordID
 import edu.mit.jwi.morph.WordnetStemmer
-
-trait Dictionary {
-
-  def isPresent(word: Word): Boolean
-  def areSynonyms(word1: Word, word2: Word): Boolean
-  def areAntonyms(word1: Word, word2: Word): Boolean
-}
 
 object Dictionary {
 
-  def apply(): Dictionary = DictionaryAdapter
+  val path: URL = getClass.getResource("/dict")
+  val dictionary: IDictionary = new jwi.Dictionary(path)
+  dictionary.open()
 
-  object DictionaryAdapter extends Dictionary {
+  def isPresent(word: Word): Boolean = lemma(word).isDefined
 
-    val path: URL = getClass.getResource("/dict")
-    val dictionary: IDictionary = new jwi.Dictionary(path)
-
-    override def isPresent(word: Word): Boolean = ???
-
-    def stem(word: Word): Option[String] = {
-      val stemmer: WordnetStemmer = new WordnetStemmer(dictionary)
-      stemmer.findStems(word.value, word.tag).asScala.toList match {
-        case h::_ => Option(h)
-        case Nil => Option.empty
-      }
+  def lemma(word: Word): Option[String] = {
+    val stemmer: WordnetStemmer = new WordnetStemmer(dictionary)
+    stemmer.findStems(word.value, word.tag).asScala.toList match {
+      case h::_ => Option(dictionary.getIndexWord(h, word.tag).getLemma())
+      case Nil => Option.empty
     }
-
-    override def areSynonyms(word1: Word, word2: Word): Boolean = ???
-
-    override def areAntonyms(word1: Word, word2: Word): Boolean = ???
   }
+
+  def areSynonyms(word1: Word, word2: Word): Boolean = if(isPresent(word1) && isPresent(word2)) {
+    meanings(word1).foreach(wordID => dictionary.getWord(wordID).getSynset().getWords()
+      .forEach(word => {println(word.getLemma()); if(word.getLemma().equals(lemma(word2).get)) return true}))
+    false
+  } else false
+
+  private def meanings(word: Word): List[IWordID] = if(isPresent(word)) {
+    dictionary.getIndexWord(lemma(word).get, word.tag).getWordIDs().asScala.toList
+  } else List()
 
 }
 
