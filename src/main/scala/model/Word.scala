@@ -14,7 +14,7 @@ object WordTag extends Enumeration {
     case Adjective => POS.ADJECTIVE
     case Verb => POS.VERB
   }
-  
+
 }
 
 case class Word(val value: String, val tag: WordTag) {
