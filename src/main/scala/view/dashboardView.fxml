@@ -80,7 +80,7 @@
                <children>
                   <TextField alignment="CENTER" layoutY="2.0" promptText="Word to find" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                   <Button layoutX="1.0" layoutY="25.0" mnemonicParsing="false" text="Go" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <ListView layoutX="-56.0" layoutY="123.0" prefHeight="250.0" prefWidth="117.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="123.0" />
+                  <ListView layoutY="124.0" prefHeight="250.0" prefWidth="117.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="124.0" />
                   <Label alignment="CENTER" layoutY="99.0" prefHeight="25.0" text="Last searched words" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <Label alignment="CENTER" layoutX="45.0" layoutY="50.0" prefHeight="50.0" prefWidth="117.0" text="Result here!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                </children>
