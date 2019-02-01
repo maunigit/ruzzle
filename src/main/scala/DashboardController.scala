@@ -1,10 +1,12 @@
 import java.io.File
+
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader}
 import javafx.scene.Scene
-import javafx.scene.control.{Button, Label, TextField}
+import javafx.scene.control._
 import javafx.stage.Stage
+import javafx.scene.layout.{GridPane, VBox}
 
 class LauchDashboard extends Application {
   override def start(primaryStage: Stage): Unit = {
@@ -20,5 +22,31 @@ class LauchDashboard extends Application {
 }
 
 class DashboardController {
+  @FXML
+  var matchMenuItem : MenuItem = _
+
+  @FXML
+  var closeMenuItem : MenuItem = _
+
+  @FXML
+  var rankMenuItem : MenuItem = _
+
+  @FXML
+  var matrixGridPane : GridPane = _
+
+  @FXML
+  var inputWordTextField : TextField = _
+
+  @FXML
+  var searchButton : Button = _
+
+  @FXML
+  var resultLabel : Label = _
+
+  @FXML
+  var searchedWordsLabel : Label = _
+
+  @FXML
+  var searchedWordsListView  : ListView[VBox] = _
 
 }
