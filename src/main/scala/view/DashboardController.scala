@@ -1,9 +1,12 @@
 package view
 
+import controller.Controller
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader}
+import javafx.geometry.Pos
 import javafx.scene.Scene
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
@@ -52,9 +55,16 @@ class DashboardController {
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
+    val board:Array[Array[Char]] = Controller.newSingleGame()
+    for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
+    val alert = new Alert(AlertType.INFORMATION)
+    alert.setTitle("Response")
+    alert.setHeaderText(null)
+    if (Controller.findWord(inputWordTextField.getText())) alert.setContentText("Good!") else alert.setContentText("Wrong...")
+    alert.showAndWait()
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {

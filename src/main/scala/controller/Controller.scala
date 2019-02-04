@@ -1,9 +1,16 @@
 package controller
 
+import model.{Board, RandomGenerator}
+
 object Controller {
 
-  def showBoard(data: Array[Array[Char]]): Unit = ???
+  var board: Board = Board(RandomGenerator, 10)
 
-  def checkWord(word: String): Boolean = ???
+  def newSingleGame(): Array[Array[Char]] = {
+    board = Board(RandomGenerator, 10)
+    board.matrix()
+  }
+
+  def findWord(word: String): Boolean = board.isPresent(word)
 
 }
