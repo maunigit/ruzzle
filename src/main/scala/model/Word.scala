@@ -20,5 +20,10 @@ object WordTag extends Enumeration {
 case class Word(val value: String, val tag: WordTag) {
 
   require(!value.isEmpty, "The word cannot be empty.")
+
+  override def equals(obj: scala.Any): Boolean = obj match {
+    case Word(objValue, _) => value == objValue
+    case _ => false
+  }
 }
 

@@ -28,4 +28,10 @@ class DictionaryTest extends FlatSpec {
     assert(!Dictionary.synset(obese).contains("thin"))
   }
 
+  "Two words" should "be equals if they have the same value" in {
+    val word1:Word = Word("abc", WordTag.Adjective)
+    val word2:Word = Word("abc", WordTag.Noun)
+    assert(word1 == word2)
+  }
+
 }
