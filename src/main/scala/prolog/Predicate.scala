@@ -11,7 +11,7 @@ trait PredicateBuilder {
 
   def name: String
   def +=(term: LogicTerm): PredicateBuilder
-  def create(): Predicate
+  def create():Predicate
 }
 
 object PredicateBuilder {
