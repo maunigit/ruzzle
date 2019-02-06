@@ -4,7 +4,6 @@ import controller.Controller
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader}
-import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
@@ -50,6 +49,9 @@ class DashboardController {
 
   @FXML
   var searchedWordsListView  : ListView[VBox] = _
+
+  @FXML
+  var typeWordComboBox : ComboBox[_] = _
 
   @FXML def closeProgram(event: ActionEvent): Unit = {
   }
