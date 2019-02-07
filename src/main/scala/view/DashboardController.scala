@@ -1,7 +1,7 @@
 package view
 
 import java.net.URL
-import java.util.ResourceBundle
+import java.util.{Optional, ResourceBundle}
 import controller.Controller
 import javafx.application.Application
 import javafx.event.ActionEvent
@@ -11,6 +11,7 @@ import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
+import javafx.scene.control.TextInputDialog
 
 class LauchDashboard extends Application {
   override def start(primaryStage: Stage): Unit = {
@@ -23,6 +24,9 @@ class LauchDashboard extends Application {
 }
 
 class DashboardController extends Initializable{
+
+  var userName : String = _
+
   @FXML
   var matchMenuItem : MenuItem = _
 
@@ -59,6 +63,14 @@ class DashboardController extends Initializable{
   @FXML def newGameMatch(event: ActionEvent): Unit = {
     val board:Array[Array[Char]] = Controller.newSingleGame()
     for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
+
+    //username input dialog
+    val dialog = new TextInputDialog()
+    dialog.setTitle("Welcome!!!")
+    dialog.setHeaderText("Take part in the Ruzzle Ranking")
+    dialog.setContentText("Please enter your name:")
+    val result : Optional[String] = dialog.showAndWait
+    userName = result.get()
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
