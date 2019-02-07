@@ -1,9 +1,13 @@
 package view
 
+import java.net.URL
+import java.util.ResourceBundle
+
 import controller.Controller
 import javafx.application.Application
+import javafx.collections.{FXCollections, ObservableList}
 import javafx.event.ActionEvent
-import javafx.fxml.{FXML, FXMLLoader}
+import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.Scene
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
@@ -22,7 +26,7 @@ class LauchDashboard extends Application {
   }
 }
 
-class DashboardController {
+class DashboardController extends Initializable{
   @FXML
   var matchMenuItem : MenuItem = _
 
@@ -51,7 +55,13 @@ class DashboardController {
   var searchedWordsListView  : ListView[VBox] = _
 
   @FXML
-  var typeWordComboBox : ComboBox[_] = _
+  var typeWordComboBox : ComboBox[ListView[String]] = new ComboBox[ListView[String]]()
+
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {
+    typeWordComboBox.getItems.clear()
+    typeWordComboBox.getItems.addAll(new ListView(FXCollections.observableArrayList("Noun", "Adjective", "Adverb", "Verb")))
+    typeWordComboBox.getSelectionModel.select(0)
+  }
 
   @FXML def closeProgram(event: ActionEvent): Unit = {
   }

@@ -64,12 +64,12 @@
                </children></AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <TextField fx:id="inputWordTextField" alignment="CENTER" layoutY="2.0" promptText="Word to find" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <ComboBox fx:id="typeWordComboBox" layoutY="25.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" promptText="Select type" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Button fx:id="searchButton" layoutY="50.0" mnemonicParsing="false" onAction="#searchWord" text="Go" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Label fx:id="resultLabel" alignment="CENTER" layoutY="75.0" prefHeight="50.0" prefWidth="117.0" text="Result here!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Label fx:id="searchedWordsLabel" alignment="CENTER" layoutY="125.0" prefHeight="25.0" text="Last searched words" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <ListView fx:id="searchedWordsListView" layoutY="153.0" prefHeight="220.0" prefWidth="117.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="153.0" />
+                  <TextField fx:id="inputWordTextField" alignment="CENTER" layoutY="2.0" prefHeight="30.0" prefWidth="117.0" promptText="Word to find" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ComboBox fx:id="typeWordComboBox" layoutY="30.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="117.0" visibleRowCount="4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Button fx:id="searchButton" layoutY="60.0" mnemonicParsing="false" onAction="#searchWord" prefHeight="30.0" prefWidth="117.0" text="Go" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Label fx:id="resultLabel" alignment="CENTER" layoutY="90.0" prefHeight="50.0" prefWidth="117.0" text="Result here!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Label fx:id="searchedWordsLabel" alignment="CENTER" layoutY="140.0" prefHeight="25.0" text="Last searched words" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <ListView fx:id="searchedWordsListView" layoutY="168.0" prefHeight="205.0" prefWidth="117.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="168.0" />
                </children>
             </AnchorPane>
         </items>
