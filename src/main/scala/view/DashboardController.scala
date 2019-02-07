@@ -5,7 +5,6 @@ import java.util.ResourceBundle
 
 import controller.Controller
 import javafx.application.Application
-import javafx.collections.{FXCollections, ObservableList}
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.Scene
@@ -55,11 +54,11 @@ class DashboardController extends Initializable{
   var searchedWordsListView  : ListView[VBox] = _
 
   @FXML
-  var typeWordComboBox : ComboBox[ListView[String]] = new ComboBox[ListView[String]]()
+  var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
-    typeWordComboBox.getItems.addAll(new ListView(FXCollections.observableArrayList("Noun", "Adjective", "Adverb", "Verb")))
+    typeWordComboBox.getItems.addAll("Noun", "Adjective", "Adverb", "Verb")
     typeWordComboBox.getSelectionModel.select(0)
   }
 

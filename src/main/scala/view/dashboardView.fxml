@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashboardController">
    <children>
       <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -65,7 +67,16 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <TextField fx:id="inputWordTextField" alignment="CENTER" layoutY="2.0" prefHeight="30.0" prefWidth="117.0" promptText="Word to find" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <ComboBox fx:id="typeWordComboBox" layoutY="30.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="117.0" visibleRowCount="4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <ComboBox fx:id="typeWordComboBox" layoutY="30.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" visibleRowCount="4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" >
+                   <items>
+                       <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Noun" />
+                           <String fx:value="Adjective" />
+                           <String fx:value="Adverb" />
+                           <String fx:value="Verb" />
+                       </FXCollections>
+                   </items>
+                  </ComboBox>
                   <Button fx:id="searchButton" layoutY="60.0" mnemonicParsing="false" onAction="#searchWord" prefHeight="30.0" prefWidth="117.0" text="Go" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <Label fx:id="resultLabel" alignment="CENTER" layoutY="90.0" prefHeight="50.0" prefWidth="117.0" text="Result here!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <Label fx:id="searchedWordsLabel" alignment="CENTER" layoutY="140.0" prefHeight="25.0" text="Last searched words" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
