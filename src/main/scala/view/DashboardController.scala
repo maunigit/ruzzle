@@ -2,7 +2,6 @@ package view
 
 import java.net.URL
 import java.util.ResourceBundle
-
 import controller.Controller
 import javafx.application.Application
 import javafx.event.ActionEvent
@@ -15,9 +14,7 @@ import javafx.stage.Stage
 
 class LauchDashboard extends Application {
   override def start(primaryStage: Stage): Unit = {
-    //GUI
     val loaderDashboard: FXMLLoader = new FXMLLoader(getClass.getResource("/view/dashboardView.fxml"))
-    //val dashboardController = new DashboardController()
     val sceneDashboard = new Scene(loaderDashboard.load())
     primaryStage.setTitle("Ruzzle")
     primaryStage.setScene(sceneDashboard)
@@ -28,9 +25,6 @@ class LauchDashboard extends Application {
 class DashboardController extends Initializable{
   @FXML
   var matchMenuItem : MenuItem = _
-
-  @FXML
-  var closeMenuItem : MenuItem = _
 
   @FXML
   var rankMenuItem : MenuItem = _
@@ -60,9 +54,6 @@ class DashboardController extends Initializable{
     typeWordComboBox.getItems.clear()
     typeWordComboBox.getItems.addAll("Noun", "Adjective", "Adverb", "Verb")
     typeWordComboBox.getSelectionModel.select(0)
-  }
-
-  @FXML def closeProgram(event: ActionEvent): Unit = {
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
