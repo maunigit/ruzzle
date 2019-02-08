@@ -86,28 +86,34 @@ class DashboardController extends Initializable{
     val filename = System.getProperty("user.dir")+ System.getProperty("file.separator") +
       "res" + System.getProperty("file.separator") +"Ranking.txt"
 
-    def using[A <: { def close(): Unit }, B](resource: A)(f: A => B): B =
-      try {
-        f(resource)
-      } finally {
-        resource.close()
-      }
+    val alert = new Alert(AlertType.INFORMATION)
+    alert.setTitle("Show Ranking")
+    alert.setHeaderText("Ruzzle Ranking")
 
-    def readTextFile(filename: String): Option[List[String]] = {
-      try {
-        val lines = using(Source.fromFile(filename)) { source =>
-          (for (line <- source.getLines) yield line).toList
-        }
-        Some(lines)
-      } catch {
-        case e: Exception => None
-      }
+    readTextFile(filename) match {
+      case Some(lines) => alert.setContentText(lines.foreach(println).toString())
+      case None => alert.setContentText("Couldn't read file")
     }
 
-    println("\n--- Ranking ---")
-    readTextFile(filename) match {
-      case Some(lines) => lines.foreach(println)
-      case None => println("Couldn't read file")
+    alert.showAndWait()
+  }
+
+  def readTextFile(filename: String): Option[List[String]] = {
+    try {
+      val lines = using(Source.fromFile(filename)) { source =>
+        (for (line <- source.getLines) yield line).toList
+      }
+      Some(lines)
+    } catch {
+      case e: Exception => None
     }
   }
+
+  //The resource is closed automatically
+  def using[A <: { def close(): Unit }, B](resource: A)(f: A => B): B =
+    try {
+      f(resource)
+    } finally {
+      resource.close()
+    }
 }
