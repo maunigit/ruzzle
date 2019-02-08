@@ -12,6 +12,7 @@ import javafx.scene.control._
 import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
 import javafx.scene.control.TextInputDialog
+import scala.io.Source
 
 class LauchDashboard extends Application {
   override def start(primaryStage: Stage): Unit = {
@@ -82,5 +83,30 @@ class DashboardController extends Initializable{
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
+    val filename = System.getProperty("user.dir")+"\\res\\Ranking.txt"
+
+    def using[A <: { def close(): Unit }, B](resource: A)(f: A => B): B =
+      try {
+        f(resource)
+      } finally {
+        resource.close()
+      }
+
+    def readTextFile(filename: String): Option[List[String]] = {
+      try {
+        val lines = using(Source.fromFile(filename)) { source =>
+          (for (line <- source.getLines) yield line).toList
+        }
+        Some(lines)
+      } catch {
+        case e: Exception => None
+      }
+    }
+
+    println("\n--- Ranking ---")
+    readTextFile(filename) match {
+      case Some(lines) => lines.foreach(println)
+      case None => println("Couldn't read file")
+    }
   }
 }
