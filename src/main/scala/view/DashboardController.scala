@@ -83,7 +83,8 @@ class DashboardController extends Initializable{
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
-    val filename = System.getProperty("user.dir")+"\\res\\Ranking.txt"
+    val filename = System.getProperty("user.dir")+ System.getProperty("file.separator") +
+      "res" + System.getProperty("file.separator") +"Ranking.txt"
 
     def using[A <: { def close(): Unit }, B](resource: A)(f: A => B): B =
       try {
