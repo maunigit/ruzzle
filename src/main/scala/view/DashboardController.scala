@@ -91,7 +91,7 @@ class DashboardController extends Initializable{
     alert.setHeaderText("Ruzzle Ranking")
 
     readTextFile(filename) match {
-      case Some(lines) => alert.setContentText(lines.foreach(println).toString())
+      case Some(lines) => lines.foreach(println)
       case None => alert.setContentText("Couldn't read file")
     }
 
