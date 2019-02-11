@@ -8,7 +8,7 @@ class BagOfWordsTest extends FlatSpec {
     val bga: BagOfWords = BagOfWords(players)
     bga.insert("marco", Word("dog", WordTag.Noun))
     bga.insert("marco", Word("cat", WordTag.Noun))
-    assert(bga("marco").get == Set(Word("dog", WordTag.Noun)), Word("cat", WordTag.Noun))
+    assert(bga("marco").get == Set(Word("dog", WordTag.Noun), Word("cat", WordTag.Noun)))
   }
 
   "Without an existing user, It" should "return an empty" in {
