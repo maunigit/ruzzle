@@ -1,6 +1,7 @@
 package controller
 
-import model.{Board, RandomGenerator}
+import model.WordTag.WordTag
+import model._
 
 object Controller {
 
@@ -11,6 +12,17 @@ object Controller {
     board.matrix()
   }
 
-  def findWord(word: String): Boolean = board.isPresent(word)
+  def findWord(wordValue: String, tag: String): Int = {
+    val wordType: WordTag = tag match {
+      case "Noun" => WordTag.Noun
+      case "Adjective" => WordTag.Adjective
+      case "Adverb" => WordTag.Adverb
+      case _ => WordTag.Verb
+    }
+    val word = Word(wordValue, wordType)
+    if(board.isPresent(word.value)) {
+      ScoreManager.wordLengthPoints(word) + ScoreManager.wordTypePoints(word)
+    } else 0
+  }
 
 }
