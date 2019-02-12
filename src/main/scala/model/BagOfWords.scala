@@ -22,7 +22,7 @@ object BagOfWords {
     override def apply(player: String): Option[Set[Word]] = {
       def obtainUniqueWords(player: String, wordList: List[Word], uniqueWordsList: List[Word]): Set[Word] = wordList match {
         case Nil => uniqueWordsList.toSet
-        case h::t => if (playerWords.filterKeys(playerInList => playerInList != player).forall(keyValueTuple => !keyValueTuple._2.contains(h)))
+        case h::t => if (playerWords.filterKeys(playerInList => playerInList != player).forall{ case (_, wordSet) => !wordSet.contains(h)})
           obtainUniqueWords(player, t, uniqueWordsList :+ h) else obtainUniqueWords(player, t, uniqueWordsList)
       }
       if(playerWords.contains(player))
