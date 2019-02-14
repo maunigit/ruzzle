@@ -4,6 +4,7 @@ import java.net.URL
 import java.util.{Optional, ResourceBundle}
 import controller.Controller
 import javafx.application.Application
+import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.Scene
@@ -12,6 +13,8 @@ import javafx.scene.control._
 import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
 import javafx.scene.control.TextInputDialog
+import javafx.scene.control.cell.PropertyValueFactory
+import model.Rank
 import scala.io.Source
 
 class LauchDashboard extends Application {
@@ -53,9 +56,9 @@ class DashboardController extends Initializable{
   @FXML
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
 
-  var rankTable : TableView[String] = new TableView[String]()
-
-  var userName : String = _
+  var rankTable : TableView[Rank] = new TableView[Rank]()
+  var userName : String = new String("Unknown")
+  var userPoints : Int = 0
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
@@ -87,14 +90,18 @@ class DashboardController extends Initializable{
   @FXML def showRank(event: ActionEvent): Unit = {
     val filename = System.getProperty("user.dir")+ System.getProperty("file.separator") +
       "res" + System.getProperty("file.separator") +"Ranking.txt"
-
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Show Ranking")
     alert.setHeaderText("Ruzzle Ranking")
     alert.setResizable(true)
 
-    val userNameCol : TableColumn[String,String] = new TableColumn("USERNAME")
-    val pointsCol : TableColumn[String,String] = new TableColumn("POINTS")
+    //rank table
+    rankTable.getColumns().clear()
+    val userNameCol : TableColumn[Rank,String] = new TableColumn("USERNAME")
+    val pointsCol : TableColumn[Rank,Int] = new TableColumn("POINTS")
+    userNameCol.setCellValueFactory(new PropertyValueFactory[Rank,String]("username"))
+    pointsCol.setCellValueFactory(new PropertyValueFactory[Rank,Int]("points"))
+    rankTable.setItems(FXCollections.observableArrayList(new Rank("Gianni", 50), new Rank("Vittorio", 70)))
     rankTable.getColumns().addAll(userNameCol, pointsCol)
     alert.getDialogPane().setContent(rankTable)
 
