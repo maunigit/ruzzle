@@ -26,8 +26,6 @@ class LauchDashboard extends Application {
 
 class DashboardController extends Initializable{
 
-  var userName : String = _
-
   @FXML
   var matchMenuItem : MenuItem = _
 
@@ -54,6 +52,10 @@ class DashboardController extends Initializable{
 
   @FXML
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
+
+  var rankTable : TableView[String] = new TableView[String]()
+
+  var userName : String = _
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
@@ -89,12 +91,17 @@ class DashboardController extends Initializable{
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Show Ranking")
     alert.setHeaderText("Ruzzle Ranking")
+    alert.setResizable(true)
+
+    val userNameCol : TableColumn[String,String] = new TableColumn("USERNAME")
+    val pointsCol : TableColumn[String,String] = new TableColumn("POINTS")
+    rankTable.getColumns().addAll(userNameCol, pointsCol)
+    alert.getDialogPane().setContent(rankTable)
 
     readTextFile(filename) match {
       case Some(lines) => lines.foreach(println)
       case None => alert.setContentText("Couldn't read file")
     }
-
     alert.showAndWait()
   }
 
