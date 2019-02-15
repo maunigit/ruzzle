@@ -68,6 +68,7 @@ class DashboardController extends Initializable{
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
     val board:Array[Array[Char]] = Controller.newSingleGame()
+    matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
     for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
     searchButton.setDisable(false)
 
