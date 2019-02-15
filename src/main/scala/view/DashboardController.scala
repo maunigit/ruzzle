@@ -63,11 +63,13 @@ class DashboardController extends Initializable{
     typeWordComboBox.getItems.clear()
     typeWordComboBox.getItems.addAll("Noun", "Adjective", "Adverb", "Verb")
     typeWordComboBox.getSelectionModel.select(0)
+    searchButton.setDisable(true)
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
     val board:Array[Array[Char]] = Controller.newSingleGame()
     for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
+    searchButton.setDisable(false)
 
     //username input dialog
     val dialog = new TextInputDialog()
