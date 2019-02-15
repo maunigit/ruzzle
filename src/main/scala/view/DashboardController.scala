@@ -2,6 +2,7 @@ package view
 
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
+
 import controller.Controller
 import javafx.application.Application
 import javafx.collections.FXCollections
@@ -15,6 +16,7 @@ import javafx.stage.Stage
 import javafx.scene.control.TextInputDialog
 import javafx.scene.control.cell.PropertyValueFactory
 import model.Rank
+import model.Word
 import scala.io.Source
 
 class LauchDashboard extends Application {
@@ -83,7 +85,8 @@ class DashboardController extends Initializable{
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Response")
     alert.setHeaderText(null)
-    if (Controller.findWord(inputWordTextField.getText())) alert.setContentText("Good!") else alert.setContentText("Wrong...")
+    val points: Int = Controller.findWord(inputWordTextField.getText(), typeWordComboBox.getValue())
+    alert.setContentText("Points achieved " + points)
     alert.showAndWait()
   }
 
