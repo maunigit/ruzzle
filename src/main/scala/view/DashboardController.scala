@@ -15,8 +15,7 @@ import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
 import javafx.scene.control.TextInputDialog
 import javafx.scene.control.cell.PropertyValueFactory
-import model.Rank
-import model.Word
+import Rank
 import scala.io.Source
 
 class LauchDashboard extends Application {

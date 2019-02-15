@@ -1,4 +1,4 @@
-package model
+package view
 
 import javafx.beans.property.{SimpleIntegerProperty, SimpleStringProperty}
 import javafx.collections.ObservableList
