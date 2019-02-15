@@ -56,7 +56,7 @@ class DashboardController extends Initializable{
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
 
   var rankTable : TableView[Rank] = new TableView[Rank]()
-  var userName : String = new String()
+  var userName : String = new String("Unknown")
   var userPoints : Int = 0
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
@@ -74,6 +74,7 @@ class DashboardController extends Initializable{
     searchButton.setDisable(false)
     inputWordTextField.setEditable(true)
     searchedWordsListView.getItems().clear()
+    inputWordTextField.clear()
 
     //username input dialog
     val dialog = new TextInputDialog()
@@ -82,7 +83,7 @@ class DashboardController extends Initializable{
     dialog.setContentText("Please enter your name:")
     val result : Optional[String] = dialog.showAndWait
     userName = result.get()
-    if(result.get().isEmpty()) userName ="Unknown"
+    if(result.get().isEmpty()) userName = "Unknown"
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
@@ -91,9 +92,10 @@ class DashboardController extends Initializable{
     alert.setHeaderText(null)
     val inputWord : String = inputWordTextField.getText()
     val points: Int = Controller.findWord(inputWord, typeWordComboBox.getValue())
+    searchedWordsListView.getItems().add(0, inputWord)
+    inputWordTextField.clear()
     alert.setContentText("Points achieved " + points)
     alert.showAndWait()
-    searchedWordsListView.getItems().add(0, inputWord)
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
