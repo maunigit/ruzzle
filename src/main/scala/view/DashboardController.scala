@@ -50,7 +50,7 @@ class DashboardController extends Initializable{
   var searchedWordsLabel : Label = _
 
   @FXML
-  var searchedWordsListView  : ListView[VBox] = _
+  var searchedWordsListView  : ListView[String] = new ListView()
 
   @FXML
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
@@ -86,9 +86,11 @@ class DashboardController extends Initializable{
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Response")
     alert.setHeaderText(null)
-    val points: Int = Controller.findWord(inputWordTextField.getText(), typeWordComboBox.getValue())
+    val inputWord : String = inputWordTextField.getText()
+    val points: Int = Controller.findWord(inputWord, typeWordComboBox.getValue())
     alert.setContentText("Points achieved " + points)
     alert.showAndWait()
+    searchedWordsListView.getItems().add(0, inputWord)
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
