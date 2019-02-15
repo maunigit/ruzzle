@@ -73,6 +73,7 @@ class DashboardController extends Initializable{
     for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
     searchButton.setDisable(false)
     inputWordTextField.setEditable(true)
+    searchedWordsListView.getItems().clear()
 
     //username input dialog
     val dialog = new TextInputDialog()
