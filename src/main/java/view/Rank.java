@@ -7,9 +7,9 @@ public class Rank {
     private final SimpleStringProperty username;
     private final SimpleIntegerProperty points;
 
-    public Rank(String fName, Integer lName) {
-        this.username = new SimpleStringProperty(fName);
-        this.points = new SimpleIntegerProperty(lName);
+    public Rank(String user, Integer point) {
+        this.username = new SimpleStringProperty(user);
+        this.points = new SimpleIntegerProperty(point);
     }
 
     public String getUsername() {

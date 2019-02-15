@@ -2,7 +2,6 @@ package view
 
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
-
 import controller.Controller
 import javafx.application.Application
 import javafx.collections.FXCollections
@@ -104,7 +103,11 @@ class DashboardController extends Initializable{
     pointsCol.setCellValueFactory(new PropertyValueFactory[Rank,Int]("points"))
     rankTable.setItems(FXCollections.observableArrayList(new Rank("Gianni", 50), new Rank("Vittorio", 70)))
     rankTable.getColumns().addAll(userNameCol, pointsCol)
-    alert.getDialogPane().setContent(rankTable)
+    rankTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY)
+    var vboxTable = new VBox()
+    vboxTable.setSpacing(5)
+    vboxTable.getChildren().addAll(rankTable)
+    alert.getDialogPane().setContent(vboxTable)
 
     readTextFile(filename) match {
       case Some(lines) => lines.foreach(println)
