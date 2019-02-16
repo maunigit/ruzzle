@@ -50,24 +50,31 @@ class DashboardController extends Initializable{
   var searchedWordsLabel : Label = _
 
   @FXML
-  var searchedWordsListView  : ListView[VBox] = _
+  var searchedWordsListView  : ListView[String] = new ListView()
 
   @FXML
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
 
   var rankTable : TableView[Rank] = new TableView[Rank]()
-  var userName : String = new String("Unknown")
+  var userName : String = new String()
   var userPoints : Int = 0
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
     typeWordComboBox.getItems.addAll("Noun", "Adjective", "Adverb", "Verb")
     typeWordComboBox.getSelectionModel.select(0)
+    searchButton.setDisable(true)
+    inputWordTextField.setEditable(false)
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
     val board:Array[Array[Char]] = Controller.newSingleGame()
+    matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
     for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
+    searchButton.setDisable(false)
+    inputWordTextField.setEditable(true)
+    searchedWordsListView.getItems().clear()
+    inputWordTextField.clear()
 
     //username input dialog
     val dialog = new TextInputDialog()
@@ -76,13 +83,17 @@ class DashboardController extends Initializable{
     dialog.setContentText("Please enter your name:")
     val result : Optional[String] = dialog.showAndWait
     userName = result.get()
+    if(result.get().isEmpty()) userName = "Unknown"
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Response")
     alert.setHeaderText(null)
-    val points: Int = Controller.findWord(inputWordTextField.getText(), typeWordComboBox.getValue())
+    val inputWord : String = inputWordTextField.getText()
+    val points: Int = Controller.findWord(inputWord, typeWordComboBox.getValue())
+    searchedWordsListView.getItems().add(0, inputWord)
+    inputWordTextField.clear()
     alert.setContentText("Points achieved " + points)
     alert.showAndWait()
   }
