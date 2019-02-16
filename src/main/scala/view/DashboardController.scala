@@ -56,7 +56,7 @@ class DashboardController extends Initializable{
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
 
   var rankTable : TableView[Rank] = new TableView[Rank]()
-  var userName : String = new String("Unknown")
+  var userName : String = new String()
   var userPoints : Int = 0
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
