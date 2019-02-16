@@ -17,7 +17,7 @@ object WordTag extends Enumeration {
 
 }
 
-case class Word(val value: String, val tag: WordTag) {
+case class Word(value: String, tag: WordTag) extends Serializable {
 
   require(!value.isEmpty, "The word cannot be empty.")
 
