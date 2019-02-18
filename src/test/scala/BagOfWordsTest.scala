@@ -1,4 +1,4 @@
-import model.{BagOfWords, Word, WordTag}
+import model.{BagOfWords, FakeGenerator, Word, WordTag}
 import org.scalatest._
 
 class BagOfWordsTest extends FlatSpec {
