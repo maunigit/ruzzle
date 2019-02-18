@@ -3,7 +3,7 @@ package model
 trait BagOfWords {
 
   def insert(player: String, word: Word): Unit
-  def apply(player: String): Option[Set[Word]]
+  def apply(player: String): Set[Word]
 }
 
 object BagOfWords {
@@ -19,15 +19,15 @@ object BagOfWords {
       case None =>
     }
 
-    override def apply(player: String): Option[Set[Word]] = {
+    override def apply(player: String): Set[Word] = {
       def obtainUniqueWords(player: String, wordList: List[Word], uniqueWordsList: List[Word]): Set[Word] = wordList match {
         case Nil => uniqueWordsList.toSet
         case h::t => if (playerWords.filterKeys(playerInList => playerInList != player).forall{ case (_, wordSet) => !wordSet.contains(h)})
           obtainUniqueWords(player, t, uniqueWordsList :+ h) else obtainUniqueWords(player, t, uniqueWordsList)
       }
       if(playerWords.contains(player))
-        Option(obtainUniqueWords(player, playerWords.getOrElse(player, Set()).toList, List()))
-      else Option.empty
+        obtainUniqueWords(player, playerWords.getOrElse(player, Set()).toList, List())
+      else Set()
     }
   }
 }

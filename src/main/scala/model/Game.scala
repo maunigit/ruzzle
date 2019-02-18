@@ -14,7 +14,7 @@ object Game {
 
   def apply(players : List[String], board : Board, dictionary: Dictionary, time : Int): Game = new BasicGame(players, board, dictionary, time)
 
-  def withSinExtension(players : List[String], board : Board, dictionary: Dictionary, time : Int): Game = new GameWithSinExtension(players, board, dictionary, time)
+  //def withSinExtension(players : List[String], board : Board, dictionary: Dictionary, time : Int): Game = new GameWithSinExtension(players, board, dictionary, time)
 
   private class BasicGame(override val players : List[String], board : Board, val dictionary: Dictionary, override val time : Int) extends Game {
 
@@ -33,7 +33,7 @@ object Game {
     def points(player: String): Int = ???
   }
 
-  private class GameWithSinExtension(players : List[String], board : Board, dictionary: Dictionary, time : Int) extends BasicGame(players, board, dictionary, time) with SinExtension
+  //private class GameWithSinExtension(players : List[String], board : Board, dictionary: Dictionary, time : Int) extends BasicGame(players, board, dictionary, time) with SinExtension
 
 }
 
