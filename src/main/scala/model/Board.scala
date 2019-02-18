@@ -4,13 +4,33 @@ import java.io.InputStream
 import prolog._
 import prolog.PredicateBuilder._
 
+/**
+  * The board of the game.
+  */
 trait Board {
 
+  /**
+    * @return the board size
+    */
   def size: Int
+
+  /**
+    * Check if a word is inside the board.
+    * @param word
+    * @return
+    */
   def isPresent(word: String): Boolean
+
+  /**
+    * The board showed as matrix.
+    * @return
+    */
   def matrix(): Array[Array[Char]]
 }
 
+/**
+  * The Board companion object.
+  */
 object Board{
 
   def apply(generator: () => Char, size: Int): Board = new BoardImpl(generator, size)
