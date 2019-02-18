@@ -18,6 +18,7 @@ class BasicGameTest extends FlatSpec{
   }
 
   "The player" should "obtain his score" in {
+    ScoreManager.standard()
     val game: Game = Game(List("luca"), Board(FakeGenerator, 10), 1)
     game.foundWord(Word("Dog", WordTag.Noun), "luca")
     game.foundWord(Word("duck", WordTag.Noun), "luca")

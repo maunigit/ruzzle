@@ -33,4 +33,15 @@ object ScoreManager {
     */
   def wordLengthPoints(word: Word): Int = word.value.length * charPoints
 
+  /**
+    * Set the standard values.
+    */
+  def standard(): Unit = {
+    nounPoints = 3
+    adjectivePoints = 4
+    adverbPoints = 4
+    verbPoints = 3
+    charPoints = 1
+  }
+
 }

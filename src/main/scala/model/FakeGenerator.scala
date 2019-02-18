@@ -21,7 +21,7 @@ object FakeGenerator extends Function0[Char] {
 
   override def apply(): Char = {
     val charToReturn: Char = fakeBoard(rowIndex)(colIndex)
-    colIndex = (colIndex + 1) % fakeBoard(0).length
+    colIndex = (colIndex + 1) % fakeBoard.length
     if(colIndex == 0)
       rowIndex = (rowIndex + 1) % fakeBoard.length
     charToReturn

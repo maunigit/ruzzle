@@ -10,7 +10,7 @@ class BoardTest extends FlatSpec with Matchers {
   }
 
   "It" should "check if a word is not present" in {
-    val board: Board = Board(FakeGenerator, 5)
+    val board: Board = Board(FakeGenerator, 10)
     assert(!board.isPresent("collution"))
     assert(board.isPresent("dog"))
   }

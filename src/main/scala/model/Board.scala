@@ -43,7 +43,7 @@ object Board{
     val engine: PrologEngine = PrologEngine.loadTheory(theory)
     buildBoard()
 
-    def buildBoard() = {
+    def buildBoard(): Unit = {
       for(i <- 0 until size; j <- 0 until size) {
         val builder:PredicateBuilder = PredicateBuilder("cell") += i += j += Constant(generator())
         engine += builder.create()
