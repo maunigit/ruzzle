@@ -3,6 +3,9 @@ package model
 import edu.mit.jwi.item.POS
 import model.WordTag.WordTag
 
+/**
+  * The enumeration that explain the type of the word (noun, adverb, adjective or verb).
+  */
 object WordTag extends Enumeration {
 
   type WordTag = Value
@@ -17,6 +20,11 @@ object WordTag extends Enumeration {
 
 }
 
+/**
+  * The word defined by the player.
+  * @param value string value
+  * @param tag word tag
+  */
 case class Word(value: String, tag: WordTag) extends Serializable {
 
   require(!value.isEmpty, "The word cannot be empty.")
