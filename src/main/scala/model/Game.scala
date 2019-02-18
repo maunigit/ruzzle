@@ -12,28 +12,33 @@ abstract class Game {
 
 object Game {
 
-  def apply(players : List[String], board : Board, dictionary: Dictionary, time : Int): Game = new BasicGame(players, board, dictionary, time)
+  def apply(players : List[String], board : Board, time : Int): Game = new BasicGame(players, board, time)
 
-  //def withSinExtension(players : List[String], board : Board, dictionary: Dictionary, time : Int): Game = new GameWithSinExtension(players, board, dictionary, time)
+  def withSinExtension(players : List[String], board : Board, time : Int): Game = new GameWithSinExtension(players, board, time)
 
-  private class BasicGame(override val players : List[String], board : Board, val dictionary: Dictionary, override val time : Int) extends Game {
+  private class BasicGame(override val players : List[String], board : Board, override val time : Int) extends Game {
 
     require(!players.isEmpty, "There must be at least one player.")
     val bagOfWords: BagOfWords = BagOfWords(players)
 
-    override def foundWord(word: Word, player: String): Boolean = ???
+    override def foundWord(word: Word, player: String): Boolean =
+      if(Dictionary.isPresent(word) && board.isPresent(word.value)){
+        bagOfWords.insert(player, word)
+        true
+      }  else false
 
-    override def words(player: String): Set[Word] = ???
+    override def words(player: String): Set[Word] = bagOfWords(player)
 
-    override def points(player: String): Int = ???
+    override def points(player: String): Int = words(player)
+      .map(word => ScoreManager.wordTypePoints(word) + ScoreManager.wordLengthPoints(word)).sum
   }
 
   private trait SinExtension extends Game {
 
-    def points(player: String): Int = ???
+    override def points(player: String): Int = ???
   }
 
-  //private class GameWithSinExtension(players : List[String], board : Board, dictionary: Dictionary, time : Int) extends BasicGame(players, board, dictionary, time) with SinExtension
+  private class GameWithSinExtension(players : List[String], board : Board, time : Int) extends BasicGame(players, board, time) with SinExtension
 
 }
 
