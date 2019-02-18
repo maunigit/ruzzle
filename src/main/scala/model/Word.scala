@@ -22,8 +22,8 @@ object WordTag extends Enumeration {
 
 /**
   * The word defined by the player.
-  * @param value string value
-  * @param tag word tag
+  * @param value
+  * @param tag
   */
 case class Word(value: String, tag: WordTag) extends Serializable {
 

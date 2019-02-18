@@ -1,22 +1,61 @@
 package prolog
 
+/**
+  * A Logic Predicate (FOL).
+  */
 trait Predicate {
 
+  /**
+    * Get the predicate name.
+    * @return
+    */
   def name: String
+
+  /**
+    * Obtain the element at index.
+    * @param index
+    * @return
+    */
   def apply(index: Int): LogicTerm
+
+  /**
+    * Check if a predicate contains variables.
+    * @return
+    */
   def containVariables(): Boolean
 }
 
+/**
+  * The Predicate Builder.
+  */
 trait PredicateBuilder {
 
+  /**
+    * The predicate name.
+    * @return
+    */
   def name: String
+
+  /**
+    * Add a Logic Term inside the predicate.
+    * @param term
+    * @return
+    */
   def +=(term: LogicTerm): PredicateBuilder
+
+  /**
+    * Create the ultimate predicate.
+    * @return
+    */
   def create():Predicate
 }
 
+/**
+  * The Predicate Builder companion object.
+  */
 object PredicateBuilder {
 
-  def apply(name: String): PredicateBuilder = new PredicateBuilderImpl(name)
+  def apply(predicateName: String): PredicateBuilder = new PredicateBuilderImpl(predicateName)
 
   private class PredicateBuilderImpl(override val name: String) extends PredicateBuilder {
 
