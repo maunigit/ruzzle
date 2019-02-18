@@ -1,11 +1,28 @@
 package model
 
+/**
+  * The Bag of Words contains the valid and unique words chosen by the players that contribute to generate the score.
+  */
 trait BagOfWords {
 
+  /**
+    * Add a specific word about that player.
+    * @param player
+    * @param word
+    */
   def insert(player: String, word: Word): Unit
+
+  /**
+    * Obtain the set of unique words about that specific player.
+    * @param player
+    * @return
+    */
   def apply(player: String): Set[Word]
 }
 
+/**
+  * The Bag of Words companion object.
+  */
 object BagOfWords {
 
   def apply(players: List[String]): BagOfWords = new BagOfWordsImpl(players)
