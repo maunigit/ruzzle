@@ -4,14 +4,41 @@ import java.io.InputStream
 
 import alice.tuprolog.{Prolog, SolveInfo, Theory}
 
+/**
+  * The tuProlog Logic engine.
+  */
 trait PrologEngine {
 
+  /**
+    * Resolve a specific goal.
+    * @param predicate
+    * @return
+    */
   def goal(predicate: Predicate): Option[SolutionSet]
+
+  /**
+    * Add a new predicate inside the theory.
+    * @param predicate
+    * @return
+    */
   def +=(predicate: Predicate): Boolean
+
+  /**
+    * Check if there are open alternatives.
+    * @return
+    */
   def hasOpenAlternatives(): Boolean
+
+  /**
+    * Switch to a new alternative.
+    * @return
+    */
   def getNextAlternative(): Option[SolutionSet]
 }
 
+/**
+  * The tuProlog Logic engine companion object.
+  */
 object PrologEngine {
 
   def apply(): PrologEngine = new PrologEngineImpl()
