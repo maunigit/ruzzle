@@ -7,13 +7,36 @@ import edu.mit.jwi
 import edu.mit.jwi.IDictionary
 import edu.mit.jwi.morph.WordnetStemmer
 
+/**
+  * An English dictionary that aims to check if a word is correct.
+  */
 trait Dictionary {
 
+  /**
+    * Check if a word is present in the dictionary.
+    * @param word
+    * @return
+    */
   def isPresent(word: Word): Boolean
+
+  /**
+    * Obtain the lemma of the word, if exists.
+    * @param word
+    * @return
+    */
   def lemma(word: Word): Option[String]
+
+  /**
+    * Obtain the synonyms of the word.
+    * @param word
+    * @return
+    */
   def synset(word: Word): Set[String]
 }
 
+/**
+  * The Dictionary object.
+  */
 object Dictionary extends Dictionary {
 
   val path: URL = getClass.getResource("/dict")
