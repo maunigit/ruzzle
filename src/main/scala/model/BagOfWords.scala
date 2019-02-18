@@ -15,7 +15,7 @@ object BagOfWords {
     var playerWords: Map[String, Set[Word]] = players.map(player => (player, Set[Word]())).toMap
 
     override def insert(player: String, word: Word): Unit = playerWords.get(player) match {
-      case Some(wordSet) => playerWords = playerWords + (player -> (wordSet + word))
+      case Some(wordSet) => playerWords = playerWords + (player -> (wordSet + Word(word.value.toLowerCase, word.tag)))
       case None =>
     }
 

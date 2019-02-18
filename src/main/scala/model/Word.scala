@@ -22,7 +22,7 @@ case class Word(value: String, tag: WordTag) extends Serializable {
   require(!value.isEmpty, "The word cannot be empty.")
 
   override def equals(obj: scala.Any): Boolean = obj match {
-    case Word(objValue, _) => value == objValue
+    case Word(objValue, _) => value.toLowerCase == objValue.toLowerCase
     case _ => false
   }
 }

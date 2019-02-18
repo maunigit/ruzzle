@@ -7,7 +7,7 @@ abstract class Game {
   def foundWord(word: Word, player: String) : Boolean
   def words(player: String): Set[Word]
   def points(player: String) : Int
-  def ranking() : List[(String,Int)] = players.map(player => (player, points(player)))
+  def ranking() : List[(String,Int)] = players.map(player => (player, points(player))).sortWith(_._2 > _._2)
 }
 
 object Game {
