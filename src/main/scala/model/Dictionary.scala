@@ -37,7 +37,7 @@ object Dictionary extends Dictionary {
       .foreach(wordId => dictionary.getWord(wordId)
         .getSynset().getWords()
           .forEach(wordId => synset = synset + wordId.getLemma()))
-    synset
+    synset.filterNot(syn => syn == lemma(word).get)
   } else Set()
 
 }
