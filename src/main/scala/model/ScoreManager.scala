@@ -12,6 +12,7 @@ object ScoreManager {
   var adverbPoints: Int = 4
   var verbPoints: Int = 3
   var charPoints: Int = 1
+  var synonymousPoints: Int = 1
 
   /**
     * Get the score about a specific word type.
@@ -42,6 +43,7 @@ object ScoreManager {
     adverbPoints = 4
     verbPoints = 3
     charPoints = 1
+    synonymousPoints = 1
   }
 
 }

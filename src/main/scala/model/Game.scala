@@ -35,7 +35,7 @@ object Game {
 
   private trait SinExtension extends Game {
 
-    override def points(player: String): Int = ???
+    override def points(player: String): Int = super.points(player)
   }
 
   private class GameWithSinExtension(players : List[String], board : Board, time : Int) extends BasicGame(players, board, time) with SinExtension
