@@ -35,7 +35,13 @@ object Game {
 
   private trait SinExtension extends Game {
 
-    override def points(player: String): Int = super.points(player)
+    override def points(player: String): Int = {
+      var additionalPoints: Int = 0
+      words(player).foreach(selectedWord => words(player).filterNot(word => word == selectedWord)
+        .filter(wordInSet => Dictionary.areSynonyms(selectedWord, wordInSet))
+        .foreach(_ => additionalPoints += ScoreManager.synonymousPoints))
+      super.points(player) + additionalPoints
+    }
   }
 
   private class GameWithSinExtension(players : List[String], board : Board, time : Int) extends BasicGame(players, board, time) with SinExtension
