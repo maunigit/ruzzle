@@ -32,6 +32,14 @@ trait Dictionary {
     * @return
     */
   def synset(word: Word): Set[String]
+
+  /**
+    * Check if 2 words are synonyms.
+    * @param word1
+    * @param word2
+    * @return
+    */
+  def areSynonyms(word1: Word, word2: Word): Boolean
 }
 
 /**
@@ -63,6 +71,8 @@ object Dictionary extends Dictionary {
     synset.filterNot(syn => syn == lemma(word).get)
   } else Set()
 
+  override def areSynonyms(word1: Word, word2: Word): Boolean =
+    isPresent(word1) && isPresent(word2) && synset(word1).contains(lemma(word2).get)
 }
 
 
