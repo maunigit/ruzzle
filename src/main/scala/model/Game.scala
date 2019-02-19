@@ -35,7 +35,7 @@ object Game {
 
   private trait SinExtension extends Game {
 
-    override def points(player: String): Int = {
+    abstract override def points(player: String): Int = {
       var additionalPoints: Int = 0
       words(player).foreach(selectedWord => words(player).filterNot(word => word == selectedWord)
         .filter(wordInSet => Dictionary.areSynonyms(selectedWord, wordInSet))
