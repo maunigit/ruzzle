@@ -26,4 +26,25 @@ class BasicGameTest extends FlatSpec{
     assert(game.points("luca") == 15)
   }
 
+  "If the same word has been chosen by more than one player, It" should "be refused" in {
+    ScoreManager.standard()
+    val game: Game = Game(List("luca", "marco"), Board(FakeGenerator, 10), 1)
+    game.foundWord(Word("Dog", WordTag.Noun), "luca")
+    game.foundWord(Word("dog", WordTag.Noun), "marco")
+    game.foundWord(Word("obese", WordTag.Adjective), "luca")
+    game.foundWord(Word("cat", WordTag.Noun), "marco")
+    assert(game.points("luca") == 9)
+    assert(game.points("marco") == 6)
+  }
+
+  "The game" should "return the exact ranking" in {
+    ScoreManager.standard()
+    val game: Game = Game(List("luca", "marco"), Board(FakeGenerator, 10), 1)
+    game.foundWord(Word("Dog", WordTag.Noun), "luca")
+    game.foundWord(Word("dog", WordTag.Noun), "marco")
+    game.foundWord(Word("obese", WordTag.Adjective), "luca")
+    game.foundWord(Word("cat", WordTag.Noun), "marco")
+    assert(game.ranking() == List(("luca", 9), ("marco", 6)))
+  }
+
 }
