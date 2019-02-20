@@ -3,7 +3,7 @@ package model
 /**
   * A generator that creates a specific and known board.
   */
-object FakeGenerator extends Function0[Char] {
+object FakeGenerator extends ( () => Char ) {
 
   val fakeBoard: Array[Array[Char]] = Array(Array('w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'),
                                             Array('w', 'd', 'o', 'g', 'w', 'a', 'w', 'w', 'w', 'w'),

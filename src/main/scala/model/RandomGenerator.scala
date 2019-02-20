@@ -5,7 +5,7 @@ import scala.util.Random
 /**
   * A random generator of chars.
   */
-object RandomGenerator extends Function0[Char] {
+object RandomGenerator extends ( () => Char ) {
 
   val dictionary: String = "aabcdeefghiijklmnoopqrstuuvwxyz"
   val random: Random = new Random()
