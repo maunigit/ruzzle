@@ -22,10 +22,16 @@ class DictionaryTest extends FlatSpec {
     assert(!Dictionary.isPresent(wrongDog))
   }
 
-  "The dictionary" should "catch right synonymous" in {
+  "The dictionary" should "catch right synonyms" in {
     val obese:Word = Word("obese", WordTag.Adjective)
     assert(Dictionary.synset(obese).contains("rotund"))
     assert(!Dictionary.synset(obese).contains("thin"))
+  }
+
+  "The dictionary" should "check if 2 words are synonyms" in {
+    val obese:Word = Word("obese", WordTag.Adjective)
+    val corpulent:Word = Word("Corpulent", WordTag.Adjective)
+    assert(Dictionary.areSynonyms(obese, corpulent))
   }
 
   "Two words" should "be equals if they have the same value" in {

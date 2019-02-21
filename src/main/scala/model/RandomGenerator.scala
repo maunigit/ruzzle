@@ -2,7 +2,10 @@ package model
 
 import scala.util.Random
 
-object RandomGenerator extends Function0[Char] {
+/**
+  * A random generator of chars.
+  */
+object RandomGenerator extends ( () => Char ) {
 
   val dictionary: String = "aabcdeefghiijklmnoopqrstuuvwxyz"
   val random: Random = new Random()

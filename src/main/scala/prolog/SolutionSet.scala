@@ -4,12 +4,28 @@ import java.util.Optional
 
 import alice.tuprolog.{SolveInfo, Var}
 
+/**
+  * The tuProlog solution set created as response of specific goal.
+  */
 trait SolutionSet {
-  
+
+  /**
+    * Obtain the value of a specific unified variable.
+    * @param variable
+    * @return
+    */
   def apply(variable: Variable): String
+
+  /**
+    * Check if the solution set does not contain variables.
+    * @return
+    */
   def isEmpty(): Boolean
 }
 
+/**
+  * The tuProlog solution set companion object.
+  */
 object SolutionSet {
 
   def apply(solveInfo: SolveInfo, predicate: Predicate): SolutionSet = new SolutionSetImpl(solveInfo, predicate)
