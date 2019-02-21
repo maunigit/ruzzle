@@ -1,10 +1,10 @@
 package view
 
+import java.io.File
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
 import controller.Controller
 import javafx.application.Application
-import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.Scene
@@ -14,7 +14,7 @@ import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
 import javafx.scene.control.TextInputDialog
 import javafx.scene.control.cell.PropertyValueFactory
-import scala.io.Source
+import model.Ranking
 
 class LauchDashboard extends Application {
   override def start(primaryStage: Stage): Unit = {
@@ -55,6 +55,8 @@ class DashboardController extends Initializable{
   @FXML
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
 
+  val fileSeparator : String = System.getProperty("file.separator")
+  val fileName : String = System.getProperty("user.dir") + fileSeparator + "res" + fileSeparator + "Ranking.txt"
   var rankTable : TableView[Rank] = new TableView[Rank]()
   var userName : String = new String()
   var userPoints : Int = 0
@@ -99,12 +101,14 @@ class DashboardController extends Initializable{
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
-    val filename = System.getProperty("user.dir")+ System.getProperty("file.separator") +
-      "res" + System.getProperty("file.separator") +"Ranking.txt"
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Show Ranking")
     alert.setHeaderText("Ruzzle Ranking")
     alert.setResizable(true)
+    var fileRanking : File = new File(fileName)
+    if(!fileRanking.exists() || fileRanking.isDirectory()) {
+      fileRanking.createNewFile()
+    }
 
     //rank table
     rankTable.getColumns().clear()
@@ -112,37 +116,14 @@ class DashboardController extends Initializable{
     val pointsCol : TableColumn[Rank,Int] = new TableColumn("POINTS")
     userNameCol.setCellValueFactory(new PropertyValueFactory[Rank,String]("username"))
     pointsCol.setCellValueFactory(new PropertyValueFactory[Rank,Int]("points"))
-    rankTable.setItems(FXCollections.observableArrayList(new Rank("Gianni", 50), new Rank("Vittorio", 70)))
+    var rank : Ranking = new Ranking()
+    rankTable.setItems(rank.getItemList())
     rankTable.getColumns().addAll(userNameCol, pointsCol)
     rankTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY)
     var vboxTable = new VBox()
     vboxTable.setSpacing(5)
     vboxTable.getChildren().addAll(rankTable)
     alert.getDialogPane().setContent(vboxTable)
-
-    readTextFile(filename) match {
-      case Some(lines) => lines.foreach(println)
-      case None => alert.setContentText("Couldn't read file")
-    }
     alert.showAndWait()
   }
-
-  def readTextFile(filename: String): Option[List[String]] = {
-    try {
-      val lines = using(Source.fromFile(filename)) { source =>
-        (for (line <- source.getLines) yield line).toList
-      }
-      Some(lines)
-    } catch {
-      case e: Exception => None
-    }
-  }
-
-  //The resource is closed automatically
-  def using[A <: { def close(): Unit }, B](resource: A)(f: A => B): B =
-    try {
-      f(resource)
-    } finally {
-      resource.close()
-    }
 }
