@@ -1,5 +1,0 @@
-Steven 20pt
-Ivan 120pt
-Andrew 75pt
-Michael 5pt
-John 65pt
