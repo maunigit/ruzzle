@@ -1,10 +1,12 @@
 package view
 
-import java.io.File
+import java.io._
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
+import scala.collection.JavaConverters._
 import controller.Controller
 import javafx.application.Application
+import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.Scene
@@ -56,7 +58,7 @@ class DashboardController extends Initializable{
   var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
 
   val fileSeparator : String = System.getProperty("file.separator")
-  val fileName : String = System.getProperty("user.dir") + fileSeparator + "res" + fileSeparator + "Ranking.txt"
+  val fileName : String = System.getProperty("user.dir") + fileSeparator + "res" + fileSeparator + "Ranking"
   var rankTable : TableView[Rank] = new TableView[Rank]()
   var userName : String = new String()
   var userPoints : Int = 0
@@ -84,8 +86,7 @@ class DashboardController extends Initializable{
     dialog.setHeaderText("Take part in the Ruzzle Ranking")
     dialog.setContentText("Please enter your name:")
     val result : Optional[String] = dialog.showAndWait
-    userName = result.get()
-    if(result.get().isEmpty()) userName = "Unknown"
+    if(result.isPresent()) userName = result.get()
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
@@ -117,7 +118,18 @@ class DashboardController extends Initializable{
     userNameCol.setCellValueFactory(new PropertyValueFactory[Rank,String]("username"))
     pointsCol.setCellValueFactory(new PropertyValueFactory[Rank,Int]("points"))
     var rank : Ranking = new Ranking()
-    rankTable.setItems(rank.getItemList())
+
+    //write
+    val oos = new ObjectOutputStream(new FileOutputStream(fileName))
+    oos.writeObject(rank)
+    oos.close
+
+    //read
+    val ois = new ObjectInputStream(new FileInputStream(fileName))
+    val ra = ois.readObject.asInstanceOf[Ranking]
+    ois.close
+
+    rankTable.setItems(FXCollections.observableArrayList(rank.getItemList().map(tuple => new Rank(tuple._1, tuple._2)).asJava))
     rankTable.getColumns().addAll(userNameCol, pointsCol)
     rankTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY)
     var vboxTable = new VBox()
