@@ -3,16 +3,20 @@ package actors
 import akka.actor.Address
 import model.Word
 
-case class NewGameMessage(time: Int)
+case class NewGame(time: Int, numberOfPlayers: Int)
 
-case class NewDistributedGameMessage(time: Int)
+case class JoinTheGame(player: String)
 
-case class IAmReadyMessage(player: String)
+case class YouAreIn()
 
-case class StartGame()
+case class Start(board: Array[Array[Char]], time: Int)
 
-case class PartecipateMessage(player: String, gameActor: Address)
+case class Stop()
 
-case class FoundWordMessage(value: String, tag: String)
+case class GameRanking(ranking: List[(String, Int)])
 
-case class AppendWordMessage(player: String, word: Word)
+case class FoundWord(word: Word)
+
+case class WordOK()
+
+case class WordWrong()
