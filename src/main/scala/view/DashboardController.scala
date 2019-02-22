@@ -85,8 +85,11 @@ class DashboardController extends Initializable{
     dialog.setTitle("Welcome!!!")
     dialog.setHeaderText("Take part in the Ruzzle Ranking")
     dialog.setContentText("Please enter your name:")
-    val result : Optional[String] = dialog.showAndWait
-    if(result.isPresent()) userName = result.get()
+    var result : Optional[String] = dialog.showAndWait()
+    while(!result.isPresent()) {
+      result = dialog.showAndWait()
+    }
+    userName = result.get()
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
