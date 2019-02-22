@@ -1,6 +1,5 @@
 package actors
 
-import akka.actor.Address
 import model.Word
 
 case class NewGame(time: Int, numberOfPlayers: Int)
