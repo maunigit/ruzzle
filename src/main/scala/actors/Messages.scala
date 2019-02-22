@@ -15,7 +15,9 @@ case class Stop()
 
 case class GameRanking(ranking: List[(String, Int)])
 
-case class FoundWord(word: Word)
+case class WordTyped(word: Word)
+
+case class FoundWord(player: String, word: Word)
 
 case class WordOK()
 

@@ -25,7 +25,7 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
       // avvisa GUI e Game che la tua partita è terminata
     case GameRanking(ranking) =>
       // spedisci il ranking alla GUI che lo visualizza
-    case FoundWord(word) =>
+    case WordTyped(word) =>
       // spedisci la parola a Game
     case WordOK() =>
       // avvisa la GUI che la parola specificata è corretta
