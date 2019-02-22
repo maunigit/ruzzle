@@ -69,6 +69,17 @@ class DashboardController extends Initializable{
     typeWordComboBox.getSelectionModel.select(0)
     searchButton.setDisable(true)
     inputWordTextField.setEditable(false)
+
+    //username input dialog
+    val dialog = new TextInputDialog()
+    dialog.setTitle("Welcome!!!")
+    dialog.setHeaderText("Take part in the Ruzzle Ranking")
+    dialog.setContentText("Please enter your name:")
+    var result : Optional[String] = dialog.showAndWait()
+    while(!result.isPresent() || result.get() == "") {
+      result = dialog.showAndWait()
+    }
+    userName = result.get()
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
@@ -79,17 +90,6 @@ class DashboardController extends Initializable{
     inputWordTextField.setEditable(true)
     searchedWordsListView.getItems().clear()
     inputWordTextField.clear()
-
-    //username input dialog
-    val dialog = new TextInputDialog()
-    dialog.setTitle("Welcome!!!")
-    dialog.setHeaderText("Take part in the Ruzzle Ranking")
-    dialog.setContentText("Please enter your name:")
-    var result : Optional[String] = dialog.showAndWait()
-    while(!result.isPresent()) {
-      result = dialog.showAndWait()
-    }
-    userName = result.get()
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
