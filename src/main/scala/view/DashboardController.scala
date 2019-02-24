@@ -121,9 +121,7 @@ class DashboardController extends Initializable{
     alert.setHeaderText("Ruzzle Ranking")
     alert.setResizable(true)
     var fileRanking : File = new File(fileName)
-    if(!fileRanking.exists() || fileRanking.isDirectory()) {
-      fileRanking.createNewFile()
-    }
+    Ranking.checkFile(fileRanking)
 
     //rank table
     rankTable.getColumns().clear()
@@ -131,19 +129,9 @@ class DashboardController extends Initializable{
     val pointsCol : TableColumn[Rank,Int] = new TableColumn("POINTS")
     userNameCol.setCellValueFactory(new PropertyValueFactory[Rank,String]("username"))
     pointsCol.setCellValueFactory(new PropertyValueFactory[Rank,Int]("points"))
-    var rank : Ranking = new Ranking()
-
-    //write
-    val oos = new ObjectOutputStream(new FileOutputStream(fileName))
-    oos.writeObject(rank)
-    oos.close
-
-    //read
-    val ois = new ObjectInputStream(new FileInputStream(fileName))
-    val ra = ois.readObject.asInstanceOf[Ranking]
-    ois.close
-
-    rankTable.setItems(FXCollections.observableArrayList(rank.getItemList().map(tuple => new Rank(tuple._1, tuple._2)).asJava))
+    Ranking.write(fileName)
+    Ranking.read(fileName)
+    rankTable.setItems(FXCollections.observableArrayList(Ranking.getItemList().map(tuple => new Rank(tuple._1, tuple._2)).asJava))
     rankTable.getColumns().addAll(userNameCol, pointsCol)
     rankTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY)
     var vboxTable = new VBox()
