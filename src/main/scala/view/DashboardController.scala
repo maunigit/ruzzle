@@ -34,6 +34,9 @@ class DashboardController extends Initializable{
   var matchMenuItem : MenuItem = _
 
   @FXML
+  var pointsMenuItem : MenuItem = _
+
+  @FXML
   var rankMenuItem : MenuItem = _
 
   @FXML
@@ -80,6 +83,14 @@ class DashboardController extends Initializable{
       result = dialog.showAndWait()
     }
     userName = result.get()
+  }
+
+  @FXML def changePoints(event: ActionEvent): Unit = {
+    val alert = new Alert(AlertType.INFORMATION)
+    alert.setTitle("Points")
+    alert.setHeaderText("Change points")
+    alert.setResizable(true)
+    alert.showAndWait()
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {

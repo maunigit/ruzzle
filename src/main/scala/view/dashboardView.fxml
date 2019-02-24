@@ -25,6 +25,11 @@
                   <MenuItem fx:id="matchMenuItem" mnemonicParsing="false" onAction="#newGameMatch" text="New Match" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+              <items>
+                <MenuItem fx:id="pointsMenuItem" mnemonicParsing="false" onAction="#changePoints" text="Change Points" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="View">
               <items>
                 <MenuItem fx:id="rankMenuItem" mnemonicParsing="false" onAction="#showRank" text="Show Ranking" />
