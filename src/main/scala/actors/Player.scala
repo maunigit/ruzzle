@@ -3,6 +3,8 @@ package actors
 import java.io.File
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import scala.concurrent._
+import ExecutionContext.Implicits.global
 import com.typesafe.config.{Config, ConfigFactory}
 import scala.concurrent.duration._
 
