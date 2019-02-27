@@ -29,43 +29,43 @@ class LauchDashboard extends Application {
   }
 }
 
-class DashboardController extends Initializable{
+class DashboardController extends Initializable {
 
   @FXML
-  var matchMenuItem : MenuItem = _
+  var matchMenuItem: MenuItem = _
 
   @FXML
-  var pointsMenuItem : MenuItem = _
+  var pointsMenuItem: MenuItem = _
 
   @FXML
-  var rankMenuItem : MenuItem = _
+  var rankMenuItem: MenuItem = _
 
   @FXML
-  var matrixGridPane : GridPane = _
+  var matrixGridPane: GridPane = _
 
   @FXML
-  var inputWordTextField : TextField = _
+  var inputWordTextField: TextField = _
 
   @FXML
-  var searchButton : Button = _
+  var searchButton: Button = _
 
   @FXML
-  var resultLabel : Label = _
+  var resultLabel: Label = _
 
   @FXML
-  var searchedWordsLabel : Label = _
+  var searchedWordsLabel: Label = _
 
   @FXML
-  var searchedWordsListView  : ListView[String] = new ListView()
+  var searchedWordsListView: ListView[String] = new ListView()
 
   @FXML
-  var typeWordComboBox : ComboBox[String] = new ComboBox[String]()
+  var typeWordComboBox: ComboBox[String] = new ComboBox[String]()
 
-  val fileSeparator : String = System.getProperty("file.separator")
-  val fileName : String = System.getProperty("user.dir") + fileSeparator + "res" + fileSeparator + "Ranking"
-  var rankTable : TableView[Rank] = new TableView[Rank]()
-  var userName : String = new String()
-  var userPoints : Int = 0
+  val fileSeparator: String = System.getProperty("file.separator")
+  val fileName: String = System.getProperty("user.dir") + fileSeparator + "res" + fileSeparator + "Ranking"
+  var rankTable: TableView[Rank] = new TableView[Rank]()
+  var userName: String = new String()
+  var userPoints: Int = 0
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
@@ -79,8 +79,8 @@ class DashboardController extends Initializable{
     dialog.setTitle("Welcome!!!")
     dialog.setHeaderText("Take part in the Ruzzle Ranking")
     dialog.setContentText("Please enter your name:")
-    var result : Optional[String] = dialog.showAndWait()
-    while(!result.isPresent() || result.get() == "") {
+    var result: Optional[String] = dialog.showAndWait()
+    while (!result.isPresent() || result.get() == "") {
       result = dialog.showAndWait()
     }
     userName = result.get()
@@ -91,24 +91,24 @@ class DashboardController extends Initializable{
     alert.setTitle("Points")
     alert.setHeaderText("Change points")
     alert.setResizable(true)
-    val nounLabel :Label = new Label("Noun Points: ")
-    val adjectiveLabel :Label = new Label("Adjective Points: ")
-    val adverbLabel :Label = new Label("Adverb Points: ")
-    val verbLabel :Label = new Label("Verb Points: ")
-    var nounSlider : Slider = new Slider(1,9,3)
-    var adjectiveSlider : Slider = new Slider(1,9,4)
-    var adverbSlider : Slider  = new Slider(1,9,4)
-    var verbSlider : Slider  = new Slider(1,9,3)
-    var nounValue  = new Label(nounSlider.getValue().toInt.toString())
-    var adjectiveValue  = new Label(adjectiveSlider.getValue().toInt.toString())
-    var adverbValue  = new Label(adverbSlider.getValue().toInt.toString())
-    var verbValue  = new Label(verbSlider.getValue().toInt.toString())
+    val nounLabel: Label = new Label("Noun Points: ")
+    val adjectiveLabel: Label = new Label("Adjective Points: ")
+    val adverbLabel: Label = new Label("Adverb Points: ")
+    val verbLabel: Label = new Label("Verb Points: ")
+    var nounSlider: Slider = new Slider(1, 9, 3)
+    var adjectiveSlider: Slider = new Slider(1, 9, 4)
+    var adverbSlider: Slider = new Slider(1, 9, 4)
+    var verbSlider: Slider = new Slider(1, 9, 3)
+    var nounValue = new Label(nounSlider.getValue().toInt.toString())
+    var adjectiveValue = new Label(adjectiveSlider.getValue().toInt.toString())
+    var adverbValue = new Label(adverbSlider.getValue().toInt.toString())
+    var verbValue = new Label(verbSlider.getValue().toInt.toString())
 
     //temporary, to change
-    var nounPoints= 3
-    var adjectivePoints= 4
-    var adverbPoints= 4
-    var verbPoints= 3
+    var nounPoints = 3
+    var adjectivePoints = 4
+    var adverbPoints = 4
+    var verbPoints = 3
 
     val grid: GridPane = new GridPane()
     GridPane.setConstraints(nounLabel, 0, 0)
@@ -136,26 +136,26 @@ class DashboardController extends Initializable{
     grid.getChildren().add(adverbValue)
     grid.getChildren().add(verbValue)
     nounSlider.valueProperty().addListener(new ChangeListener[Number] {
-      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit ={
-        nounPoints= newValue.intValue()
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        nounPoints = newValue.intValue()
         nounValue.setText(newValue.intValue().toString())
       }
     })
     adjectiveSlider.valueProperty().addListener(new ChangeListener[Number] {
-      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit ={
-        adjectivePoints= newValue.intValue()
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        adjectivePoints = newValue.intValue()
         adjectiveValue.setText(newValue.intValue().toString())
       }
     })
     adverbSlider.valueProperty().addListener(new ChangeListener[Number] {
-      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit ={
-        adverbPoints= newValue.intValue()
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        adverbPoints = newValue.intValue()
         adverbValue.setText(newValue.intValue().toString())
       }
     })
     verbSlider.valueProperty().addListener(new ChangeListener[Number] {
-      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit ={
-        verbPoints= newValue.intValue()
+      override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
+        verbPoints = newValue.intValue()
         verbValue.setText(newValue.intValue().toString())
       }
     })
@@ -164,7 +164,7 @@ class DashboardController extends Initializable{
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
-    val board:Array[Array[Char]] = Controller.newSingleGame()
+    val board: Array[Array[Char]] = Controller.newSingleGame()
     matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
     for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
     searchButton.setDisable(false)
@@ -177,7 +177,7 @@ class DashboardController extends Initializable{
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Response")
     alert.setHeaderText(null)
-    val inputWord : String = inputWordTextField.getText()
+    val inputWord: String = inputWordTextField.getText()
     val points: Int = Controller.findWord(inputWord, typeWordComboBox.getValue())
     searchedWordsListView.getItems().add(0, inputWord)
     inputWordTextField.clear()
@@ -190,15 +190,15 @@ class DashboardController extends Initializable{
     alert.setTitle("Show Ranking")
     alert.setHeaderText("Ruzzle Ranking")
     alert.setResizable(true)
-    var fileRanking : File = new File(fileName)
+    var fileRanking: File = new File(fileName)
     Ranking.checkFile(fileRanking)
 
     //rank table
     rankTable.getColumns().clear()
-    val userNameCol : TableColumn[Rank,String] = new TableColumn("USERNAME")
-    val pointsCol : TableColumn[Rank,Int] = new TableColumn("POINTS")
-    userNameCol.setCellValueFactory(new PropertyValueFactory[Rank,String]("username"))
-    pointsCol.setCellValueFactory(new PropertyValueFactory[Rank,Int]("points"))
+    val userNameCol: TableColumn[Rank, String] = new TableColumn("USERNAME")
+    val pointsCol: TableColumn[Rank, Int] = new TableColumn("POINTS")
+    userNameCol.setCellValueFactory(new PropertyValueFactory[Rank, String]("username"))
+    pointsCol.setCellValueFactory(new PropertyValueFactory[Rank, Int]("points"))
     Ranking.write(fileName)
     Ranking.read(fileName)
     rankTable.setItems(FXCollections.observableArrayList(Ranking.getItemList().map(tuple => new Rank(tuple._1, tuple._2)).asJava))
