@@ -1,6 +1,5 @@
 package view
 
-import java.io._
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
 

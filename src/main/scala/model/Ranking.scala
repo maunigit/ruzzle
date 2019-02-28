@@ -16,11 +16,7 @@ object Ranking {
       ois.close
     }
     val rankingFile = new File(fileName)
-    if(!rankingFile.exists()) {
-      rankingFile.createNewFile()
-    } else {
-      readFile()
-    }
+    if(!rankingFile.exists()) rankingFile.createNewFile() else readFile()
   }
 
 
