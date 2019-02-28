@@ -64,8 +64,6 @@ class DashboardController extends Initializable {
   @FXML
   var typeWordComboBox: ComboBox[String] = new ComboBox[String]()
 
-  val fileSeparator: String = System.getProperty("file.separator")
-  val fileName: String = System.getProperty("user.dir") + fileSeparator + "res" + fileSeparator + "Ranking"
   var rankTable: TableView[Rank] = new TableView[Rank]()
   var userName: String = new String()
   var userPoints: Int = 0
@@ -160,15 +158,7 @@ class DashboardController extends Initializable {
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
-    val alert = new Alert(AlertType.INFORMATION)
-    alert.setTitle("Response")
-    alert.setHeaderText(null)
-    val inputWord: String = inputWordTextField.getText()
-    val points: Int = Controller.findWord(inputWord, typeWordComboBox.getValue())
-    searchedWordsListView.getItems().add(0, inputWord)
-    inputWordTextField.clear()
-    alert.setContentText("Points achieved " + points)
-    alert.showAndWait()
+
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
@@ -176,8 +166,6 @@ class DashboardController extends Initializable {
     alert.setTitle("Show Ranking")
     alert.setHeaderText("Ruzzle Ranking")
     alert.setResizable(true)
-    var fileRanking: File = new File(fileName)
-    Ranking.checkFile(fileRanking)
 
     //rank table
     rankTable.getColumns().clear()
@@ -185,8 +173,6 @@ class DashboardController extends Initializable {
     val pointsCol: TableColumn[Rank, Int] = new TableColumn("POINTS")
     userNameCol.setCellValueFactory(new PropertyValueFactory[Rank, String]("username"))
     pointsCol.setCellValueFactory(new PropertyValueFactory[Rank, Int]("points"))
-    Ranking.write(fileName)
-    Ranking.read(fileName)
     rankTable.setItems(FXCollections.observableArrayList(Ranking.getItemList().map(tuple => new Rank(tuple._1, tuple._2)).asJava))
     rankTable.getColumns().addAll(userNameCol, pointsCol)
     rankTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY)

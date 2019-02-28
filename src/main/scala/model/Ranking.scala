@@ -2,28 +2,40 @@ package model
 
 import java.io._
 
-@SerialVersionUID(100L)
-object Ranking extends Serializable {
-  var rankList: List[(String, Int)] = List(("Mario", 150), ("Luigi", 25))
+object Ranking {
 
-  def checkFile(file: File): Unit = {
-    if (!file.exists() || file.isDirectory()) {
-      file.createNewFile()
+  private var rankList: List[(String, Int)] = List()
+  val fileName: String = System.getProperty("user.dir") + System.getProperty("file.separator") + "res" + System.getProperty("file.separator") + "Ranking.bin"
+
+  checkIfExists()
+
+  private def checkIfExists() = {
+    def readFile(): Unit = {
+      val ois = new ObjectInputStream(new FileInputStream(fileName))
+      rankList = ois.readObject.asInstanceOf[List[(String, Int)]]
+      ois.close
+    }
+    val rankingFile = new File(fileName)
+    if(!rankingFile.exists()) {
+      rankingFile.createNewFile()
+    } else {
+      readFile()
     }
   }
 
+
   def getItemList(): List[(String, Int)] = rankList
 
-  def read(fileName: String): Unit = {
-    val ois = new ObjectInputStream(new FileInputStream(fileName))
-    val rank = ois.readObject.asInstanceOf[Ranking.type]
-    ois.close
+  def +=(scores: (String, Int)*): Unit = {
+    def writeFile(): Unit = {
+      val oos = new ObjectOutputStream(new FileOutputStream(fileName))
+      oos.writeObject(rankList)
+      oos.close
+    }
+    scores.foreach{ case (username, points) => rankList = rankList :+ (username, points)}
+    writeFile()
   }
 
-  def write(fileName: String): Unit = {
-    val oos = new ObjectOutputStream(new FileOutputStream(fileName))
-    oos.writeObject(Ranking)
-    oos.close
-  }
+
 
 }
