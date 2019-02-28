@@ -4,8 +4,8 @@ import java.io.File
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
 
-import actors.{GUI, Game}
-import akka.actor.{ActorSystem, Props}
+import actors.{GUI, NewGame}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.collection.JavaConverters._
@@ -69,8 +69,7 @@ class DashboardController extends Initializable {
 
   val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/player_config.conf").toURI))
   val system: ActorSystem = ActorSystem.create("ruzzle", config)
-  val a = system.actorOf(Props(new GUI(this)))
-  a ! "a"
+  val guiActor: ActorRef = system.actorOf(Props(new GUI(this)))
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
@@ -156,7 +155,7 @@ class DashboardController extends Initializable {
     if(!username.isPresent || (username.isPresent && username.get().isEmpty)) {
       showAlert("E' obbligatorio inserire uno username!")
     } else {
-
+      guiActor ! NewGame(username.get(), 1, 1, false)
     }
   }
 
