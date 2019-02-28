@@ -1,11 +1,15 @@
 package view
 
+import java.io.File
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
 
+import actors.{GUI, Game}
+import akka.actor.{ActorSystem, Props}
+import com.typesafe.config.{Config, ConfigFactory}
+
 import scala.collection.JavaConverters._
-import controller.Controller
-import javafx.application.Application
+import javafx.application.{Application, Platform}
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
@@ -63,9 +67,10 @@ class DashboardController extends Initializable {
   @FXML
   var typeWordComboBox: ComboBox[String] = new ComboBox[String]()
 
-  var rankTable: TableView[Rank] = new TableView[Rank]()
-  var userName: String = new String()
-  var userPoints: Int = 0
+  val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/player_config.conf").toURI))
+  val system: ActorSystem = ActorSystem.create("ruzzle", config)
+  val a = system.actorOf(Props(new GUI(this)))
+  a ! "a"
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
@@ -74,7 +79,6 @@ class DashboardController extends Initializable {
     searchButton.setDisable(true)
     inputWordTextField.setEditable(false)
   }
-
 
   @FXML def changePoints(event: ActionEvent): Unit = {
     val alert = new Alert(AlertType.INFORMATION)
@@ -152,7 +156,7 @@ class DashboardController extends Initializable {
     if(!username.isPresent || (username.isPresent && username.get().isEmpty)) {
       showAlert("E' obbligatorio inserire uno username!")
     } else {
-      // crea l'agente giocatore
+
     }
   }
 
@@ -166,7 +170,7 @@ class DashboardController extends Initializable {
     alert.setHeaderText("Ruzzle Ranking")
     alert.setResizable(true)
 
-    //rank table
+    val rankTable: TableView[Rank] = new TableView[Rank]()
     rankTable.getColumns().clear()
     val userNameCol: TableColumn[Rank, String] = new TableColumn("USERNAME")
     val pointsCol: TableColumn[Rank, Int] = new TableColumn("POINTS")
