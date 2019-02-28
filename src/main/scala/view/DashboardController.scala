@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory
 import model.Ranking
 
 class LauchDashboard extends Application {
+
   override def start(primaryStage: Stage): Unit = {
     val loaderDashboard: FXMLLoader = new FXMLLoader(getClass.getResource("/view/dashboardView.fxml"))
     val sceneDashboard = new Scene(loaderDashboard.load())
@@ -27,6 +28,7 @@ class LauchDashboard extends Application {
     primaryStage.setScene(sceneDashboard)
     primaryStage.show()
   }
+
 }
 
 class DashboardController extends Initializable {
@@ -73,18 +75,8 @@ class DashboardController extends Initializable {
     typeWordComboBox.getSelectionModel.select(0)
     searchButton.setDisable(true)
     inputWordTextField.setEditable(false)
-
-    //username input dialog
-    val dialog = new TextInputDialog()
-    dialog.setTitle("Welcome!!!")
-    dialog.setHeaderText("Take part in the Ruzzle Ranking")
-    dialog.setContentText("Please enter your name:")
-    var result: Optional[String] = dialog.showAndWait()
-    while (!result.isPresent() || result.get() == "") {
-      result = dialog.showAndWait()
-    }
-    userName = result.get()
   }
+
 
   @FXML def changePoints(event: ActionEvent): Unit = {
     val alert = new Alert(AlertType.INFORMATION)
@@ -164,13 +156,12 @@ class DashboardController extends Initializable {
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
-    val board: Array[Array[Char]] = Controller.newSingleGame()
-    matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
-    for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
-    searchButton.setDisable(false)
-    inputWordTextField.setEditable(true)
-    searchedWordsListView.getItems().clear()
-    inputWordTextField.clear()
+    val username: Optional[String] = showUsernameDialog()
+    if(!username.isPresent || (username.isPresent && username.get().isEmpty)) {
+      showAlert("E' obbligatorio inserire uno username!")
+    } else {
+      // crea l'agente giocatore
+    }
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
@@ -210,4 +201,30 @@ class DashboardController extends Initializable {
     alert.getDialogPane().setContent(vboxTable)
     alert.showAndWait()
   }
+
+  def showUsernameDialog(): Optional[String] = {
+    val dialog = new TextInputDialog()
+    dialog.setTitle("Welcome!!!")
+    dialog.setHeaderText("Take part in the Ruzzle Ranking")
+    dialog.setContentText("Please enter your name:")
+    dialog.showAndWait()
+  }
+
+  def showAlert(text: String): Unit = {
+    val alert = new Alert(AlertType.INFORMATION)
+    alert.setTitle("Message")
+    alert.setHeaderText(null)
+    alert.setContentText(text)
+    alert.showAndWait()
+  }
+
+  def insertBoard(board: Array[Array[Char]]): Unit = {
+    matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
+    for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
+    searchButton.setDisable(false)
+    inputWordTextField.setEditable(true)
+    searchedWordsListView.getItems().clear()
+    inputWordTextField.clear()
+  }
+
 }
