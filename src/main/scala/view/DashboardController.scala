@@ -3,6 +3,7 @@ package view
 import java.io._
 import java.net.URL
 import java.util.{Optional, ResourceBundle}
+
 import scala.collection.JavaConverters._
 import controller.Controller
 import javafx.application.Application
@@ -17,7 +18,7 @@ import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
 import javafx.scene.control.TextInputDialog
 import javafx.scene.control.cell.PropertyValueFactory
-import model.Ranking
+import model.{Ranking, ScoreManager}
 
 class LauchDashboard extends Application {
 
@@ -96,12 +97,6 @@ class DashboardController extends Initializable {
     var adverbValue = new Label(adverbSlider.getValue().toInt.toString())
     var verbValue = new Label(verbSlider.getValue().toInt.toString())
 
-    //temporary, to change
-    var nounPoints = 3
-    var adjectivePoints = 4
-    var adverbPoints = 4
-    var verbPoints = 3
-
     val grid: GridPane = new GridPane()
     GridPane.setConstraints(nounLabel, 0, 0)
     GridPane.setConstraints(adjectiveLabel, 0, 1)
@@ -129,25 +124,25 @@ class DashboardController extends Initializable {
     grid.getChildren().add(verbValue)
     nounSlider.valueProperty().addListener(new ChangeListener[Number] {
       override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
-        nounPoints = newValue.intValue()
+        ScoreManager.nounPoints = newValue.intValue()
         nounValue.setText(newValue.intValue().toString())
       }
     })
     adjectiveSlider.valueProperty().addListener(new ChangeListener[Number] {
       override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
-        adjectivePoints = newValue.intValue()
+        ScoreManager.adjectivePoints = newValue.intValue()
         adjectiveValue.setText(newValue.intValue().toString())
       }
     })
     adverbSlider.valueProperty().addListener(new ChangeListener[Number] {
       override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
-        adverbPoints = newValue.intValue()
+        ScoreManager.adverbPoints = newValue.intValue()
         adverbValue.setText(newValue.intValue().toString())
       }
     })
     verbSlider.valueProperty().addListener(new ChangeListener[Number] {
       override def changed(observable: ObservableValue[_ <: Number], oldValue: Number, newValue: Number): Unit = {
-        verbPoints = newValue.intValue()
+        ScoreManager.verbPoints = newValue.intValue()
         verbValue.setText(newValue.intValue().toString())
       }
     })
