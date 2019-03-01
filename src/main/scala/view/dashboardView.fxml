@@ -23,6 +23,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem fx:id="matchMenuItem" mnemonicParsing="false" onAction="#newGameMatch" text="New Match" />
+                  <MenuItem fx:id="matchMultiplayerMenuItem" mnemonicParsing="false" onAction="#newGameMatchMultiplayer" text="New Multiplayer Match" />
+                  <MenuItem fx:id="existGameMenuItem" mnemonicParsing="false" onAction="#joinExistGame" text="Join An Existing Game" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Edit">
