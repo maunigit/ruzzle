@@ -3,8 +3,9 @@ package actors
 import akka.actor.{Actor, ActorRef, PoisonPill}
 import model.{Board, FakeGenerator, Game}
 
-class Game(val time: Int, val numberOfPlayers: Int) extends Actor {
+class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean) extends Actor {
 
+  println("ESISTO" + self.path.toString)
   var players: List[(String, ActorRef)] = List()
   var stopReceived: Int = 0
   var game: Option[model.Game] = Option.empty

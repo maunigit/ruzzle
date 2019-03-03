@@ -2,7 +2,7 @@ package actors
 
 import model.Word
 
-case class NewGame(time: Int, numberOfPlayers: Int)
+case class NewGame(player: String, time: Int, numberOfPlayers: Int, useSynExtension: Boolean)
 
 case class JoinTheGame(player: String)
 
