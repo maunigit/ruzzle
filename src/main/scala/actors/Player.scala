@@ -8,6 +8,7 @@ import akka.remote.WireFormats.TimeUnit
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import com.typesafe.config.{Config, ConfigFactory}
+import model.{Word, WordTag}
 
 import scala.concurrent.duration._
 
@@ -20,25 +21,26 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
       val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/game_config.conf").toURI))
       val system: ActorSystem = ActorSystem.create("ruzzle", config)
       game = Option(system.actorOf(Props(new Game(time, numberOfPlayers, useSynExtension)), "game"))
-      val a = context.actorSelection("akka.tcp:127.0.0.1:2600@//ruzzle/user/game")
-      a.resolveOne(1 minutes).onComplete(ref => println("ESISTE"))
-      game.get ! JoinTheGame(name)
+      if(game.isDefined) game.get ! JoinTheGame(name)
     case YouAreIn() =>
-      // avvisa la Gui che la partita è stata creata
+      guiActor ! YouAreIn()
     case Start(board, time) =>
-      // spedisci alla gui il board della partita
+      guiActor ! Start(board, time)
       context.system.scheduler.scheduleOnce(time minutes, self, Stop())
     case Stop() =>
       // avvisa GUI e Game che la tua partita è terminata
       game.get ! Stop()
     case GameRanking(ranking) =>
       // spedisci il ranking alla GUI che lo visualizza
-    case WordTyped(word) =>
-      // spedisci la parola a Game
-      game.get ! FoundWord(name, word)
+    case FoundWord(value, tag) => tag match {
+      case "Adjective" => game.get ! WordTyped(name, Word(value, WordTag.Adjective))
+      case "Adverb" => game.get ! WordTyped(name, Word(value, WordTag.Adverb))
+      case "Verb" => game.get ! WordTyped(name, Word(value, WordTag.Verb))
+      case _ => game.get ! WordTyped(name, Word(value, WordTag.Noun))
+    }
     case WordOK() =>
-      // avvisa la GUI che la parola specificata è corretta
+      guiActor ! WordOK()
     case WordWrong() =>
-      // avvia la GUI che la parola è errata
+      guiActor ! WordWrong()
   }
 }

@@ -5,7 +5,7 @@ import java.net.URL
 import java.util.regex.{Matcher, Pattern}
 import java.util.{Optional, ResourceBundle}
 
-import actors.{GUI, NewGame}
+import actors.{FoundWord, GUI, NewGame}
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.typesafe.config.{Config, ConfigFactory}
 
@@ -203,48 +203,109 @@ class DashboardController extends Initializable {
   }
 
   @FXML def joinExistGame(event: ActionEvent): Unit = {
-    val dialog : Dialog[Tuple2[String, String]] = new Dialog()
-    dialog.setTitle("Existing Game")
-    dialog.setHeaderText("Join An Existing Game")
+    val dialog : Dialog[(String, String)] = new Dialog()
+    dialog.setTitle("Join a game")
+    dialog.setHeaderText("Join an existing game.")
     dialog.setResizable(true)
 
     val grid: GridPane = new GridPane()
     val usernameTextField: TextField = new TextField()
-    val ipAddressTextField: TextField = new TextField()
+    val ipTextField: TextField = new TextField()
     var okButton : ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
-    dialog.getDialogPane().getButtonTypes().addAll(okButton, ButtonType.CANCEL)
+    dialog.getDialogPane().getButtonTypes().addAll(okButton)
     grid.add(new Label("Username: "), 0, 0)
     grid.add(new Label("IP Address: "), 0, 1)
     grid.add(usernameTextField, 1, 0)
-    grid.add(ipAddressTextField, 1, 1)
+    grid.add(ipTextField, 1, 1)
     dialog.getDialogPane().setContent(grid)
 
-    //dialog.setResultConverter()
+    dialog.setResultConverter(dialogButton => {
+      if(dialogButton == okButton) (usernameTextField.getText, ipTextField.getText) else null
+    })
 
-    if (!validateIP(ipAddressTextField.getText())) {
-      val alert = new Alert(AlertType.ERROR)
-      alert.setTitle("Error")
-      alert.setHeaderText("Invalid IP Address")
+    val result: Optional[(String, String)] = dialog.showAndWait()
+    if(result.isPresent) {
+      if(result.get()._1.isEmpty || result.get()._2.isEmpty) {
+        showAlert("You must insert a value in both fields.")
+      } else {
+        // crea la partita
+      }
     }
-
-    dialog.showAndWait()
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
-    val username: Optional[String] = showUsernameDialog()
-    if (!username.isPresent || (username.isPresent && username.get().isEmpty)) {
-      showAlert("E' obbligatorio inserire uno username!")
-    } else {
-      guiActor ! NewGame(username.get(), 1, 1, false)
+    val dialog : Dialog[(String, Int, Boolean)] = new Dialog()
+    dialog.setTitle("New Single Player Game")
+    dialog.setHeaderText("Create a new single player game.")
+    dialog.setResizable(true)
+
+    val grid: GridPane = new GridPane()
+    val usernameTextField: TextField = new TextField()
+    val timeField: Spinner[Int] = new Spinner[Int](1, 10, 1)
+    val synExtension: CheckBox = new CheckBox("Synonym Extension")
+    var okButton : ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
+    dialog.getDialogPane().getButtonTypes().addAll(okButton)
+    grid.add(new Label("Username: "), 0, 0)
+    grid.add(new Label("Time (min): "), 0, 1)
+    grid.add(synExtension, 0, 2)
+    grid.add(usernameTextField, 1, 0)
+    grid.add(timeField, 1, 1)
+    dialog.getDialogPane().setContent(grid)
+
+    dialog.setResultConverter(dialogButton => {
+      if(dialogButton == okButton) (usernameTextField.getText, timeField.getValue, synExtension.isSelected) else null
+    })
+
+    val result: Optional[(String, Int, Boolean)] = dialog.showAndWait()
+    if(result.isPresent) {
+      result.get() match {
+        case (username, time, synExtension) => if(username.isEmpty) showAlert("You must insert a valid username!") else guiActor ! NewGame(username, time, 1, synExtension)
+      }
     }
+
   }
 
   @FXML def newGameMatchMultiplayer(event: ActionEvent): Unit = {
+    val dialog : Dialog[(String, Int, Boolean, Int)] = new Dialog()
+    dialog.setTitle("New Multi Player Game")
+    dialog.setHeaderText("Create a new multi player game.")
+    dialog.setResizable(true)
 
+    val grid: GridPane = new GridPane()
+    val usernameTextField: TextField = new TextField()
+    val timeField: Spinner[Int] = new Spinner[Int](1, 10, 1)
+    val synExtension: CheckBox = new CheckBox("Synonym Extension")
+    val playerNumber: Spinner[Int] = new Spinner[Int](2, 10, 2)
+    var okButton : ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
+    dialog.getDialogPane().getButtonTypes().addAll(okButton)
+    grid.add(new Label("Username: "), 0, 0)
+    grid.add(new Label("Time (min): "), 0, 1)
+    grid.add(synExtension, 0, 2)
+    grid.add(new Label("Participants (me included): "), 0, 3)
+    grid.add(usernameTextField, 1, 0)
+    grid.add(timeField, 1, 1)
+    grid.add(playerNumber, 1, 3)
+    dialog.getDialogPane().setContent(grid)
+
+    dialog.setResultConverter(dialogButton => {
+      if(dialogButton == okButton) (usernameTextField.getText, timeField.getValue, synExtension.isSelected, playerNumber.getValue) else null
+    })
+
+    val result: Optional[(String, Int, Boolean, Int)] = dialog.showAndWait()
+    if(result.isPresent) {
+      if(result.get()._1.isEmpty) {
+        showAlert("You must insert a valid username!")
+      } else {
+        // crea la partita
+      }
+    }
   }
 
   @FXML def searchWord(event: ActionEvent): Unit = {
-
+    val wordValue: String = inputWordTextField.getText
+    val wordType: String = typeWordComboBox.getValue
+    guiActor ! FoundWord(wordValue, wordType)
+    inputWordTextField.setText("")
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
@@ -269,36 +330,25 @@ class DashboardController extends Initializable {
     alert.showAndWait()
   }
 
-  def showUsernameDialog(): Optional[String] = {
-    val dialog = new TextInputDialog()
-    dialog.setTitle("Welcome!!!")
-    dialog.setHeaderText("Take part in the Ruzzle Ranking")
-    dialog.setContentText("Please enter your name:")
-    dialog.showAndWait()
-  }
-
   def showAlert(text: String): Unit = {
-    val alert = new Alert(AlertType.INFORMATION)
-    alert.setTitle("Message")
-    alert.setHeaderText(null)
-    alert.setContentText(text)
-    alert.showAndWait()
+    Platform.runLater(() => {
+      val alert = new Alert(AlertType.INFORMATION)
+      alert.setTitle("Message")
+      alert.setHeaderText(null)
+      alert.setContentText(text)
+      alert.showAndWait()
+    })
   }
 
   def insertBoard(board: Array[Array[Char]]): Unit = {
-    matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
-    for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
-    searchButton.setDisable(false)
-    inputWordTextField.setEditable(true)
-    searchedWordsListView.getItems().clear()
-    inputWordTextField.clear()
-  }
-
-  def validateIP(ip: String): Boolean = {
-    var ipAddressPattern: String = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
-    var pattern: Pattern = Pattern.compile(ipAddressPattern)
-    var matcher: Matcher = pattern.matcher(ip)
-    matcher.matches()
+    Platform.runLater(() => {
+      matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
+      for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
+      searchButton.setDisable(false)
+      inputWordTextField.setEditable(true)
+      searchedWordsListView.getItems().clear()
+      inputWordTextField.clear()
+    })
   }
 
 }

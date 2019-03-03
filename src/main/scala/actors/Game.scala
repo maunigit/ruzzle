@@ -5,7 +5,6 @@ import model.{Board, FakeGenerator, Game}
 
 class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean) extends Actor {
 
-  println("ESISTO" + self.path.toString)
   var players: List[(String, ActorRef)] = List()
   var stopReceived: Int = 0
   var game: Option[model.Game] = Option.empty
@@ -19,7 +18,7 @@ class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean
         game = Option(Game(players.map{case (user, _) => user}, board, time))
         players.map{case (_, ref) => ref}.foreach(ref => ref ! Start(board.matrix(), time))
       }
-    case FoundWord(player, word) =>
+    case WordTyped(player, word) =>
       if(game.get.foundWord(word, player)) sender() ! WordOK() else sender() ! WordWrong()
     case Stop() =>
       stopReceived += 1

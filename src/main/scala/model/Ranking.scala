@@ -5,7 +5,7 @@ import java.io._
 object Ranking {
 
   private var rankList: List[(String, Int)] = List()
-  val fileName: String = System.getProperty("user.dir") + System.getProperty("file.separator") + "res" + System.getProperty("file.separator") + "Ranking.bin"
+  val fileName: String = System.getProperty("user.dir") + System.getProperty("file.separator") + "Ranking.bin"
 
   checkIfExists()
 
