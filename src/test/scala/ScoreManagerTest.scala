@@ -8,6 +8,7 @@ class ScoreManagerTest extends FlatSpec {
     val dog:Word = Word("dog", WordTag.Noun)
     assert(ScoreManager.wordTypePoints(dog) == 3)
     assert(ScoreManager.wordLengthPoints(dog) == 3)
+    assert(ScoreManager.characterTypePoints(dog) == 4)
   }
 
   "The score of a word" should "be correct even when It changes" in {
