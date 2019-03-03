@@ -1,10 +1,9 @@
 package view
 
 import java.net.URL
+import java.util.regex.{Matcher, Pattern}
 import java.util.{Optional, ResourceBundle}
-
 import scala.collection.JavaConverters._
-import controller.Controller
 import javafx.application.Application
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.collections.FXCollections
@@ -12,6 +11,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.Scene
 import javafx.scene.control.Alert.AlertType
+import javafx.scene.control.ButtonBar.ButtonData
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
@@ -198,12 +198,36 @@ class DashboardController extends Initializable {
   }
 
   @FXML def joinExistGame(event: ActionEvent): Unit = {
+    val dialog : Dialog[Tuple2[String, String]] = new Dialog()
+    dialog.setTitle("Existing Game")
+    dialog.setHeaderText("Join An Existing Game")
+    dialog.setResizable(true)
 
+    val grid: GridPane = new GridPane()
+    val usernameTextField: TextField = new TextField()
+    val ipAddressTextField: TextField = new TextField()
+    var okButton : ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
+    dialog.getDialogPane().getButtonTypes().addAll(okButton, ButtonType.CANCEL)
+    grid.add(new Label("Username: "), 0, 0)
+    grid.add(new Label("IP Address: "), 0, 1)
+    grid.add(usernameTextField, 1, 0)
+    grid.add(ipAddressTextField, 1, 1)
+    dialog.getDialogPane().setContent(grid)
+
+    //dialog.setResultConverter()
+
+    if (!validateIP(ipAddressTextField.getText())) {
+      val alert = new Alert(AlertType.ERROR)
+      alert.setTitle("Error")
+      alert.setHeaderText("Invalid IP Address")
+    }
+
+    dialog.showAndWait()
   }
 
   @FXML def newGameMatch(event: ActionEvent): Unit = {
     val username: Optional[String] = showUsernameDialog()
-    if(!username.isPresent || (username.isPresent && username.get().isEmpty)) {
+    if (!username.isPresent || (username.isPresent && username.get().isEmpty)) {
       showAlert("E' obbligatorio inserire uno username!")
     } else {
       // crea l'agente giocatore
@@ -263,6 +287,13 @@ class DashboardController extends Initializable {
     inputWordTextField.setEditable(true)
     searchedWordsListView.getItems().clear()
     inputWordTextField.clear()
+  }
+
+  def validateIP(ip: String): Boolean = {
+    var ipAddressPattern: String = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
+    var pattern: Pattern = Pattern.compile(ipAddressPattern)
+    var matcher: Matcher = pattern.matcher(ip)
+    matcher.matches()
   }
 
 }
