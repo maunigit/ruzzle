@@ -4,7 +4,11 @@ import model.Word
 
 case class NewGame(player: String, time: Int, numberOfPlayers: Int, useSynExtension: Boolean)
 
+case class TakePartOfAnExistingGame(player: String, address: String)
+
 case class JoinTheGame(player: String)
+
+case class WrongGameReference()
 
 case class YouAreIn()
 

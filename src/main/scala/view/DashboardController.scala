@@ -5,7 +5,7 @@ import java.net.URL
 import java.util.regex.{Matcher, Pattern}
 import java.util.{Optional, ResourceBundle}
 
-import actors.{FoundWord, GUI, NewGame}
+import actors._
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.typesafe.config.{Config, ConfigFactory}
 
@@ -225,10 +225,8 @@ class DashboardController extends Initializable {
 
     val result: Optional[(String, String)] = dialog.showAndWait()
     if(result.isPresent) {
-      if(result.get()._1.isEmpty || result.get()._2.isEmpty) {
-        showAlert("You must insert a value in both fields.")
-      } else {
-        // crea la partita
+      result.get() match {
+        case (username, address) => if(username.isEmpty || address.isEmpty) showAlert("You must fill both fields!") else guiActor ! TakePartOfAnExistingGame(username, address)
       }
     }
   }
@@ -293,10 +291,8 @@ class DashboardController extends Initializable {
 
     val result: Optional[(String, Int, Boolean, Int)] = dialog.showAndWait()
     if(result.isPresent) {
-      if(result.get()._1.isEmpty) {
-        showAlert("You must insert a valid username!")
-      } else {
-        // crea la partita
+      result.get() match {
+        case (username, time, synExtension, participants) => if(username.isEmpty) showAlert("You must insert a valid username!") else guiActor ! NewGame(username, time, participants, synExtension)
       }
     }
   }
@@ -309,25 +305,30 @@ class DashboardController extends Initializable {
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
-    val alert = new Alert(AlertType.INFORMATION)
-    alert.setTitle("Show Ranking")
-    alert.setHeaderText("Ruzzle Ranking")
-    alert.setResizable(true)
+    showDialogRank(Ranking.getItemList())
+  }
 
-    val rankTable: TableView[Rank] = new TableView[Rank]()
-    rankTable.getColumns().clear()
-    val userNameCol: TableColumn[Rank, String] = new TableColumn("USERNAME")
-    val pointsCol: TableColumn[Rank, Int] = new TableColumn("POINTS")
-    userNameCol.setCellValueFactory(new PropertyValueFactory[Rank, String]("username"))
-    pointsCol.setCellValueFactory(new PropertyValueFactory[Rank, Int]("points"))
-    rankTable.setItems(FXCollections.observableArrayList(Ranking.getItemList().map(tuple => new Rank(tuple._1, tuple._2)).asJava))
-    rankTable.getColumns().addAll(userNameCol, pointsCol)
-    rankTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY)
-    var vboxTable = new VBox()
-    vboxTable.setSpacing(5)
-    vboxTable.getChildren().addAll(rankTable)
-    alert.getDialogPane().setContent(vboxTable)
-    alert.showAndWait()
+  def showDialogRank(ranking: List[(String, Int)]): Unit = {
+    Platform.runLater(() => {
+      val alert = new Alert(AlertType.INFORMATION)
+      alert.setTitle("Show Ranking")
+      alert.setHeaderText("Ruzzle Ranking")
+      alert.setResizable(true)
+      val rankTable: TableView[Rank] = new TableView[Rank]()
+      rankTable.getColumns().clear()
+      val userNameCol: TableColumn[Rank, String] = new TableColumn("USERNAME")
+      val pointsCol: TableColumn[Rank, Int] = new TableColumn("POINTS")
+      userNameCol.setCellValueFactory(new PropertyValueFactory[Rank, String]("username"))
+      pointsCol.setCellValueFactory(new PropertyValueFactory[Rank, Int]("points"))
+      rankTable.setItems(FXCollections.observableArrayList(ranking.map(tuple => new Rank(tuple._1, tuple._2)).asJava))
+      rankTable.getColumns().addAll(userNameCol, pointsCol)
+      rankTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY)
+      var vboxTable = new VBox()
+      vboxTable.setSpacing(5)
+      vboxTable.getChildren().addAll(rankTable)
+      alert.getDialogPane().setContent(vboxTable)
+      alert.showAndWait()
+    })
   }
 
   def showAlert(text: String): Unit = {
