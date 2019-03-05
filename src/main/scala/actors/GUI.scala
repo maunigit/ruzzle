@@ -10,11 +10,15 @@ class GUI(val view: DashboardController) extends Actor {
 
   override def receive: Receive = {
     case NewGame(username, time, numberOfPlayers, useSynExtension) =>
-      player = Option(context.actorOf(Props(new Player(username, self))))
-      player.get ! NewGame(username, time, numberOfPlayers, useSynExtension)
+      if(!gameAlreadyExists()) {
+        player = Option(context.actorOf(Props(new Player(username, self))))
+        player.get ! NewGame(username, time, numberOfPlayers, useSynExtension)
+      }
     case TakePartOfAnExistingGame(username, address) =>
-      player = Option(context.actorOf(Props(new Player(username, self))))
-      player.get ! TakePartOfAnExistingGame(username, address)
+      if(!gameAlreadyExists()) {
+        player = Option(context.actorOf(Props(new Player(username, self))))
+        player.get ! TakePartOfAnExistingGame(username, address)ion)
+      }
     case WrongGameReference() =>
       view.showAlert("The inserted address is wrong...")
     case YouAreIn() =>
@@ -31,6 +35,13 @@ class GUI(val view: DashboardController) extends Actor {
       player = Option.empty
       view.showAlert("Well Done! The match is over...")
       view.showDialogRank(ranking)
+  }
+
+  def gameAlreadyExists(): Boolean = {
+    if(player.isDefined) {
+      view.showAlert("Another game is already running...")
+      true
+    } else false
   }
 
 }

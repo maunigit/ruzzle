@@ -14,13 +14,15 @@ import scala.concurrent.duration._
 class Player(val name: String, val guiActor: ActorRef) extends Actor {
 
   var game: Option[ActorRef] = Option.empty
+  var singleGame: Boolean = true
 
   override def receive: Receive = {
     case NewGame(_, time, numberOfPlayers, useSynExtension) =>
+      if(numberOfPlayers != 1) singleGame = false
       val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/game_config.conf").toURI))
       val system: ActorSystem = ActorSystem.create("ruzzle", config)
       game = Option(system.actorOf(Props(new Game(time, numberOfPlayers, useSynExtension)), "game"))
-      if(game.isDefined) game.get ! JoinTheGame(name)
+      game.get ! JoinTheGame(name)
     case TakePartOfAnExistingGame(_, address) =>
       context.actorSelection("akka.tcp://ruzzle@" + address + ":2600/user/game").resolveOne(10 seconds).onComplete(result => {
         if(result.isSuccess) {
@@ -41,7 +43,7 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
       game.get ! Stop()
     case GameRanking(ranking) =>
       guiActor ! GameRanking(ranking)
-      if(ranking.length == 1) Ranking += ranking.head
+      if(singleGame) Ranking += ranking.head
       self ! PoisonPill
     case FoundWord(value, tag) => tag match {
       case "Adjective" => game.get ! WordTyped(name, Word(value, WordTag.Adjective))
