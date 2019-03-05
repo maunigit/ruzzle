@@ -30,7 +30,7 @@ object Game {
     override def words(player: String): Set[Word] = bagOfWords(player)
 
     override def points(player: String): Int = words(player)
-      .map(word => ScoreManager.wordTypePoints(word) + ScoreManager.wordLengthPoints(word)).sum
+      .map(word => ScoreManager.wordTypePoints(word) + ScoreManager.wordLengthPoints(word) + ScoreManager.characterTypePoints(word)).sum
   }
 
   private trait SinExtension extends Game {
