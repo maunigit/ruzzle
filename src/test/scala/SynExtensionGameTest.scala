@@ -10,7 +10,7 @@ class SynExtensionGameTest extends FlatSpec {
     game.foundWord(Word("rotund", WordTag.Adjective), "luca")
     game.foundWord(Word("Obese", WordTag.Adjective), "luca")
     game.foundWord(Word("blablabla", WordTag.Verb), "luca")
-    assert(game.points("luca") == 27)
+    assert(game.points("luca") == 47)
   }
 
 }

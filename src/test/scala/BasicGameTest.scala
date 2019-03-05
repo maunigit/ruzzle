@@ -23,7 +23,7 @@ class BasicGameTest extends FlatSpec{
     game.foundWord(Word("Dog", WordTag.Noun), "luca")
     game.foundWord(Word("duck", WordTag.Noun), "luca")
     game.foundWord(Word("obese", WordTag.Adjective), "luca")
-    assert(game.points("luca") == 15)
+    assert(game.points("luca") == 27)
   }
 
   "If the same word has been chosen by more than one player, It" should "be refused" in {
@@ -33,8 +33,8 @@ class BasicGameTest extends FlatSpec{
     game.foundWord(Word("dog", WordTag.Noun), "marco")
     game.foundWord(Word("obese", WordTag.Adjective), "luca")
     game.foundWord(Word("cat", WordTag.Noun), "marco")
-    assert(game.points("luca") == 9)
-    assert(game.points("marco") == 6)
+    assert(game.points("luca") == 17)
+    assert(game.points("marco") == 10)
   }
 
   "The game" should "return the exact ranking" in {
@@ -44,7 +44,7 @@ class BasicGameTest extends FlatSpec{
     game.foundWord(Word("dog", WordTag.Noun), "marco")
     game.foundWord(Word("obese", WordTag.Adjective), "luca")
     game.foundWord(Word("cat", WordTag.Noun), "marco")
-    assert(game.ranking() == List(("luca", 9), ("marco", 6)))
+    assert(game.ranking() == List(("luca", 17), ("marco", 10)))
   }
 
 }
