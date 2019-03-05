@@ -18,6 +18,7 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
 
   override def receive: Receive = {
     case NewGame(_, time, numberOfPlayers, useSynExtension) =>
+      setEmergencyExit(time)
       if(numberOfPlayers != 1) singleGame = false
       val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/game_config.conf").toURI))
       val system: ActorSystem = ActorSystem.create("ruzzle", config)
@@ -43,7 +44,7 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
       game.get ! Stop()
     case GameRanking(ranking) =>
       guiActor ! GameRanking(ranking)
-      if(singleGame) Ranking += ranking.head
+      if(singleGame && !ranking.isEmpty) Ranking += ranking.head
       self ! PoisonPill
     case FoundWord(value, tag) => tag match {
       case "Adjective" => game.get ! WordTyped(name, Word(value, WordTag.Adjective))
@@ -55,5 +56,10 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
       guiActor ! WordOK()
     case WordWrong() =>
       guiActor ! WordWrong()
+    case EmergencyExit() =>
+      guiActor ! EmergencyExit()
+      self ! PoisonPill
   }
+
+  def setEmergencyExit(time: Int) = context.system.scheduler.scheduleOnce(time*3 minutes, self, EmergencyExit())
 }

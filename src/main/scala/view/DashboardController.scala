@@ -315,6 +315,16 @@ class DashboardController extends Initializable {
     showDialogRank(Ranking.getItemList())
   }
 
+  private def showAlert(text: String): Unit = {
+    Platform.runLater(() => {
+      val alert = new Alert(AlertType.INFORMATION)
+      alert.setTitle("Message")
+      alert.setHeaderText(null)
+      alert.setContentText(text)
+      alert.showAndWait()
+    })
+  }
+
   def showDialogRank(ranking: List[(String, Int)]): Unit = {
     Platform.runLater(() => {
       searchButton.setDisable(true)
@@ -339,16 +349,6 @@ class DashboardController extends Initializable {
     })
   }
 
-  def showAlert(text: String): Unit = {
-    Platform.runLater(() => {
-      val alert = new Alert(AlertType.INFORMATION)
-      alert.setTitle("Message")
-      alert.setHeaderText(null)
-      alert.setContentText(text)
-      alert.showAndWait()
-    })
-  }
-
   def insertBoard(board: Array[Array[Char]]): Unit = {
     Platform.runLater(() => {
       matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
@@ -357,6 +357,58 @@ class DashboardController extends Initializable {
       inputWordTextField.setEditable(true)
       searchedWordsListView.getItems().clear()
       inputWordTextField.clear()
+    })
+  }
+
+  def gameFinished(): Unit = {
+    Platform.runLater(() => {
+      showAlert("Well Done! The match is over...")
+      searchButton.setDisable(true)
+      emptyBoard()
+    })
+  }
+
+  def gameBroken(): Unit = {
+    Platform.runLater(() => {
+      showAlert("The Game has been deleted or it no longer responds...")
+      searchButton.setDisable(true)
+      emptyBoard()
+    })
+  }
+
+  def emptyBoard(): Unit = {
+    Platform.runLater(() => {
+      for (i <- 0 to 10; j <- 0 to 10) matrixGridPane.add(new Label(" "), i, j)
+    })
+  }
+
+  def wrongAddress(): Unit = {
+    Platform.runLater(() => {
+      showAlert("The inserted address is wrong...")
+    })
+  }
+
+  def youAreInTheGame(): Unit = {
+    Platform.runLater(() => {
+      showAlert("Well Done! You have joined the game!")
+    })
+  }
+
+  def warnForAGoodWord(): Unit = {
+    Platform.runLater(() => {
+      showAlert("Perfect! The word is correct.")
+    })
+  }
+
+  def warnForABadWord(): Unit = {
+    Platform.runLater(() => {
+      showAlert("Sorry! Bad word...")
+    })
+  }
+
+  def warnForAnExistingGame(): Unit = {
+    Platform.runLater(() => {
+      showAlert("Another game is already running...")
     })
   }
 

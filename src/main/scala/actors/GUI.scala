@@ -17,29 +17,32 @@ class GUI(val view: DashboardController) extends Actor {
     case TakePartOfAnExistingGame(username, address) =>
       if(!gameAlreadyExists()) {
         player = Option(context.actorOf(Props(new Player(username, self))))
-        player.get ! TakePartOfAnExistingGame(username, address)ion)
+        player.get ! TakePartOfAnExistingGame(username, address)
       }
     case WrongGameReference() =>
-      view.showAlert("The inserted address is wrong...")
+      view.wrongAddress()
     case YouAreIn() =>
-      view.showAlert("Well Done! You have joined the game!")
+      view.youAreInTheGame()
     case Start(board, _) =>
       view.insertBoard(board)
     case FoundWord(value, tag) =>
       player.get ! FoundWord(value, tag)
     case WordOK() =>
-      view.showAlert("Perfect! The word is correct.")
+      view.warnForAGoodWord()
     case WordWrong() =>
-      view.showAlert("Sorry! Bad word...")
+      view.warnForABadWord()
     case GameRanking(ranking) =>
       player = Option.empty
-      view.showAlert("Well Done! The match is over...")
+      view.gameFinished()
       view.showDialogRank(ranking)
+    case EmergencyExit() =>
+      view.gameBroken()
+      player = Option.empty
   }
 
   def gameAlreadyExists(): Boolean = {
     if(player.isDefined) {
-      view.showAlert("Another game is already running...")
+      view.warnForAnExistingGame()
       true
     } else false
   }

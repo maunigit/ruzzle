@@ -25,3 +25,5 @@ case class FoundWord(value: String, tag: String)
 case class WordOK()
 
 case class WordWrong()
+
+case class EmergencyExit()

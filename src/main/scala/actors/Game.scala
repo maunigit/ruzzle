@@ -2,12 +2,14 @@ package actors
 
 import akka.actor.{Actor, ActorRef, PoisonPill}
 import model.{Board, FakeGenerator, Game}
+import scala.concurrent.duration._
 
 class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean) extends Actor {
 
   var players: List[(String, ActorRef)] = List()
   var stopReceived: Int = 0
   var game: Option[model.Game] = Option.empty
+  setEmergencyExit(time)
 
   override def receive: Receive = {
     case JoinTheGame(player) =>
@@ -24,10 +26,19 @@ class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean
     case Stop() =>
       stopReceived += 1
       if(stopReceived == numberOfPlayers) {
-        val ranking: List[(String, Int)] = game.get.ranking()
-        players.map{case (_, ref) => ref}.foreach(ref => ref ! GameRanking(ranking))
+        sendRanking()
         self ! PoisonPill
       }
+    case EmergencyExit() =>
+      sendRanking()
+      self ! PoisonPill
   }
+
+  def sendRanking(): Unit = {
+    val ranking: List[(String, Int)] = game.get.ranking()
+    players.map{case (_, ref) => ref}.foreach(ref => ref ! GameRanking(ranking))
+  }
+
+  def setEmergencyExit(time: Int) = context.system.scheduler.scheduleOnce(time*2 minutes, self, EmergencyExit())
 
 }
