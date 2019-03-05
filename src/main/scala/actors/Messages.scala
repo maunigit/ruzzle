@@ -4,6 +4,8 @@ import model.Word
 
 case class NewGame(player: String, time: Int, numberOfPlayers: Int, useSynExtension: Boolean)
 
+case class GameAddress(address: String)
+
 case class TakePartOfAnExistingGame(player: String, address: String)
 
 case class JoinTheGame(player: String)

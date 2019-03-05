@@ -3,6 +3,8 @@ package actors
 import akka.actor.{Actor, ActorRef, PoisonPill}
 import model.{Board, FakeGenerator, Game}
 import scala.concurrent.duration._
+import scala.concurrent._
+import ExecutionContext.Implicits.global
 
 class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean) extends Actor {
 
@@ -27,7 +29,7 @@ class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean
       stopReceived += 1
       if(stopReceived == numberOfPlayers) {
         sendRanking()
-        self ! PoisonPill
+        context.stop(self)
       }
     case EmergencyExit() =>
       sendRanking()

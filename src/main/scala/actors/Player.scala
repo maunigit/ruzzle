@@ -20,12 +20,14 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
     case NewGame(_, time, numberOfPlayers, useSynExtension) =>
       setEmergencyExit(time)
       if(numberOfPlayers != 1) singleGame = false
-      val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/game_config.conf").toURI))
+      val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/player_config.conf").toURI))
       val system: ActorSystem = ActorSystem.create("ruzzle", config)
       game = Option(system.actorOf(Props(new Game(time, numberOfPlayers, useSynExtension)), "game"))
+      if(!singleGame)
+        guiActor ! GameAddress(AddressExtension.hostOf(system) + ":" + AddressExtension.portOf(system))
       game.get ! JoinTheGame(name)
     case TakePartOfAnExistingGame(_, address) =>
-      context.actorSelection("akka.tcp://ruzzle@" + address + ":2600/user/game").resolveOne(10 seconds).onComplete(result => {
+      context.actorSelection("akka.tcp://ruzzle@" + address + "/user/game").resolveOne(10 seconds).onComplete(result => {
         if(result.isSuccess) {
           game = Option(result.get)
           println(game.get)

@@ -1,6 +1,7 @@
 package view
 
 import java.io.File
+import java.lang.reflect.Method
 import java.net.URL
 import java.util.regex.{Matcher, Pattern}
 import java.util.{Optional, ResourceBundle}
@@ -327,7 +328,6 @@ class DashboardController extends Initializable {
 
   def showDialogRank(ranking: List[(String, Int)]): Unit = {
     Platform.runLater(() => {
-      searchButton.setDisable(true)
       val alert = new Alert(AlertType.INFORMATION)
       alert.setTitle("Show Ranking")
       alert.setHeaderText("Ruzzle Ranking")
@@ -349,22 +349,30 @@ class DashboardController extends Initializable {
     })
   }
 
+  def showAddress(address: String): Unit = {
+    Platform.runLater(() => {
+      showAlert("The game is at " + address)
+    })
+  }
+
   def insertBoard(board: Array[Array[Char]]): Unit = {
     Platform.runLater(() => {
-      matrixGridPane.getChildren().retainAll(matrixGridPane.getChildren().get(0))
+      resultLabel.setText("Go ...")
+      matrixGridPane.getChildren().clear()
       for (i <- board.indices; j <- board(0).indices) matrixGridPane.add(new Label(board(i)(j).toString()), i, j)
       searchButton.setDisable(false)
       inputWordTextField.setEditable(true)
-      searchedWordsListView.getItems().clear()
       inputWordTextField.clear()
     })
   }
 
   def gameFinished(): Unit = {
     Platform.runLater(() => {
-      showAlert("Well Done! The match is over...")
       searchButton.setDisable(true)
       emptyBoard()
+      inputWordTextField.clear()
+      searchedWordsListView.getItems().clear()
+      resultLabel.setText("Ready to Play...")
     })
   }
 
@@ -373,12 +381,21 @@ class DashboardController extends Initializable {
       showAlert("The Game has been deleted or it no longer responds...")
       searchButton.setDisable(true)
       emptyBoard()
+      inputWordTextField.clear()
+      searchedWordsListView.getItems().clear()
+      resultLabel.setText("Ready to Play...")
     })
   }
 
   def emptyBoard(): Unit = {
+    def getNumberOfRows(gridPane: GridPane): Int = {
+      val method: Method = gridPane.getClass.getDeclaredMethod("getNumberOfRows")
+      method.setAccessible(true)
+      method.invoke(gridPane).asInstanceOf[Int]
+    }
     Platform.runLater(() => {
-      for (i <- 0 to 10; j <- 0 to 10) matrixGridPane.add(new Label(" "), i, j)
+      matrixGridPane.getChildren().clear()
+      for (i <- 0 to getNumberOfRows(matrixGridPane); j <- 0 to getNumberOfRows(matrixGridPane)) matrixGridPane.add(new Label(" "), i, j)
     })
   }
 
@@ -391,18 +408,19 @@ class DashboardController extends Initializable {
   def youAreInTheGame(): Unit = {
     Platform.runLater(() => {
       showAlert("Well Done! You have joined the game!")
+      resultLabel.setText("Please Wait...")
     })
   }
 
   def warnForAGoodWord(): Unit = {
     Platform.runLater(() => {
-      showAlert("Perfect! The word is correct.")
+      resultLabel.setText("Good Word!")
     })
   }
 
   def warnForABadWord(): Unit = {
     Platform.runLater(() => {
-      showAlert("Sorry! Bad word...")
+      resultLabel.setText("Wrong...")
     })
   }
 

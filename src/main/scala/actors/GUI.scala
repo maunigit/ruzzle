@@ -19,6 +19,8 @@ class GUI(val view: DashboardController) extends Actor {
         player = Option(context.actorOf(Props(new Player(username, self))))
         player.get ! TakePartOfAnExistingGame(username, address)
       }
+    case GameAddress(address) =>
+      view.showAddress(address)
     case WrongGameReference() =>
       view.wrongAddress()
     case YouAreIn() =>
