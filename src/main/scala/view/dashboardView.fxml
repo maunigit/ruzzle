@@ -84,7 +84,7 @@
                    </items>
                   </ComboBox>
                   <Button fx:id="searchButton" layoutY="60.0" mnemonicParsing="false" onAction="#searchWord" prefHeight="30.0" prefWidth="117.0" text="Go" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Label fx:id="resultLabel" alignment="CENTER" layoutY="90.0" prefHeight="50.0" prefWidth="117.0" text="Result here!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Label fx:id="resultLabel" alignment="CENTER" layoutY="90.0" prefHeight="50.0" prefWidth="117.0" text="Ready To Play!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <Label fx:id="searchedWordsLabel" alignment="CENTER" layoutY="140.0" prefHeight="25.0" text="Last searched words" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <ListView fx:id="searchedWordsListView" layoutY="168.0" prefHeight="205.0" prefWidth="117.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="168.0" />
                </children>

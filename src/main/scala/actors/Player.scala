@@ -2,43 +2,71 @@ package actors
 
 import java.io.File
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Address, AddressFromURIString, Props}
-import akka.remote.WireFormats.TimeUnit
+import akka.actor.{Actor, ActorRef, ActorSystem, PoisonPill, Props}
 
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import com.typesafe.config.{Config, ConfigFactory}
+import model.{Ranking, Word, WordTag}
 
 import scala.concurrent.duration._
 
+/**
+  * The actor that represents a player taking part of a game.
+  * @param name
+  * @param guiActor
+  */
 class Player(val name: String, val guiActor: ActorRef) extends Actor {
 
   var game: Option[ActorRef] = Option.empty
+  var singleGame: Boolean = false
 
   override def receive: Receive = {
     case NewGame(_, time, numberOfPlayers, useSynExtension) =>
-      val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/game_config.conf").toURI))
+      setEmergencyExit(time)
+      if(numberOfPlayers == 1) singleGame = true
+      val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/player_config.conf").toURI))
       val system: ActorSystem = ActorSystem.create("ruzzle", config)
       game = Option(system.actorOf(Props(new Game(time, numberOfPlayers, useSynExtension)), "game"))
-      val a = context.actorSelection("akka.tcp:127.0.0.1:2600@//ruzzle/user/game")
-      a.resolveOne(1 minutes).onComplete(ref => println("ESISTE"))
+      if(!singleGame)
+        guiActor ! GameAddress(AddressExtension.hostOf(system) + ":" + AddressExtension.portOf(system))
       game.get ! JoinTheGame(name)
+    case TakePartOfAnExistingGame(_, address) =>
+      context.actorSelection("akka.tcp://ruzzle@" + address + "/user/game").resolveOne(10 seconds).onComplete(result => {
+        if(result.isSuccess) {
+          game = Option(result.get)
+          println(game.get)
+          game.get ! JoinTheGame(name)
+        } else {
+          guiActor ! WrongGameReference()
+          self ! PoisonPill
+        }
+      })
     case YouAreIn() =>
-      // avvisa la Gui che la partita è stata creata
+      guiActor ! YouAreIn()
     case Start(board, time) =>
-      // spedisci alla gui il board della partita
+      guiActor ! Start(board, time)
       context.system.scheduler.scheduleOnce(time minutes, self, Stop())
     case Stop() =>
-      // avvisa GUI e Game che la tua partita è terminata
       game.get ! Stop()
     case GameRanking(ranking) =>
-      // spedisci il ranking alla GUI che lo visualizza
-    case WordTyped(word) =>
-      // spedisci la parola a Game
-      game.get ! FoundWord(name, word)
+      guiActor ! GameRanking(ranking)
+      if(singleGame && !ranking.isEmpty) Ranking += ranking.head
+      self ! PoisonPill
+    case FoundWord(value, tag) => tag match {
+      case "Adjective" => game.get ! WordTyped(name, Word(value, WordTag.Adjective))
+      case "Adverb" => game.get ! WordTyped(name, Word(value, WordTag.Adverb))
+      case "Verb" => game.get ! WordTyped(name, Word(value, WordTag.Verb))
+      case _ => game.get ! WordTyped(name, Word(value, WordTag.Noun))
+    }
     case WordOK() =>
-      // avvisa la GUI che la parola specificata è corretta
+      guiActor ! WordOK()
     case WordWrong() =>
-      // avvia la GUI che la parola è errata
+      guiActor ! WordWrong()
+    case EmergencyExit() =>
+      guiActor ! EmergencyExit()
+      self ! PoisonPill
   }
+
+  def setEmergencyExit(time: Int) = context.system.scheduler.scheduleOnce(time*3 minutes, self, EmergencyExit())
 }

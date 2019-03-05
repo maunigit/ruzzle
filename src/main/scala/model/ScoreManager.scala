@@ -37,6 +37,19 @@ object ScoreManager {
   def wordLengthPoints(word: Word): Int = word.value.length * charPoints
 
   /**
+    * Get the score for the word's vowels and consonants.
+    * @param word
+    * @return
+    */
+  def characterTypePoints(word: Word): Int = {
+    def computeVowelAndConsonantPoints(charList: List[Char], accumulator: Int): Int = charList match {
+      case h::t => if(h.isVowel) computeVowelAndConsonantPoints(t, accumulator + vowelPoints) else computeVowelAndConsonantPoints(t, accumulator + consonantPoints)
+      case Nil => accumulator
+    }
+    computeVowelAndConsonantPoints(word.value.toList, 0)
+  }
+
+  /**
     * Set the standard values.
     */
   def standard(): Unit = {
@@ -50,4 +63,32 @@ object ScoreManager {
     consonantPoints = 1
   }
 
+  /**
+    * The implicit class that adds methods to discover if a char is a vowel or consonant.
+    * @param char
+    */
+  implicit class VowelConsonantExtension(char: Char) {
+
+    /**
+      * Check if a char is vowel.
+      * @return
+      */
+    def isVowel: Boolean = char.isLetter && (char.toLower match {
+      case 'a' => true
+      case 'e' => true
+      case 'i' => true
+      case 'o' => true
+      case 'u' => true
+      case _ => false
+    })
+
+    /**
+      * Check if a char is consonant.
+      * @return
+      */
+    def isConsonant: Boolean = char.isLetter && !char.isVowel
+  }
+
 }
+
+
