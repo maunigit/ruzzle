@@ -6,6 +6,12 @@ import scala.concurrent.duration._
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
+/**
+  * The actor that handles a specific ruzzle game.
+  * @param time
+  * @param numberOfPlayers
+  * @param useSynExtension
+  */
 class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean) extends Actor {
 
   var players: List[(String, ActorRef)] = List()

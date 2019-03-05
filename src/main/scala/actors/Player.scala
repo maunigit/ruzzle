@@ -11,15 +11,20 @@ import model.{Ranking, Word, WordTag}
 
 import scala.concurrent.duration._
 
+/**
+  * The actor that represents a player taking part of a game.
+  * @param name
+  * @param guiActor
+  */
 class Player(val name: String, val guiActor: ActorRef) extends Actor {
 
   var game: Option[ActorRef] = Option.empty
-  var singleGame: Boolean = true
+  var singleGame: Boolean = false
 
   override def receive: Receive = {
     case NewGame(_, time, numberOfPlayers, useSynExtension) =>
       setEmergencyExit(time)
-      if(numberOfPlayers != 1) singleGame = false
+      if(numberOfPlayers == 1) singleGame = true
       val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/player_config.conf").toURI))
       val system: ActorSystem = ActorSystem.create("ruzzle", config)
       game = Option(system.actorOf(Props(new Game(time, numberOfPlayers, useSynExtension)), "game"))

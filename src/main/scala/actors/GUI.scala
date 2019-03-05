@@ -4,6 +4,10 @@ import akka.actor.{Actor, ActorRef, Props}
 
 import view.DashboardController
 
+/**
+  * The actor that handles the GUI.
+  * @param view the user interface of the game
+  */
 class GUI(val view: DashboardController) extends Actor {
 
   var player: Option[ActorRef] = Option.empty
