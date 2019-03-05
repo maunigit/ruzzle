@@ -1,15 +1,54 @@
 package model
 
+/**
+  * The Ruzzle Game.
+  */
 abstract class Game {
 
+  /**
+    * The time of the game (min).
+    * @return
+    */
   def time : Int
+
+  /**
+    * The list of the players.
+    * @return
+    */
   def players : List[String]
+
+  /**
+    * Notice that a player has found a word.
+    * @param word
+    * @param player
+    * @return
+    */
   def foundWord(word: Word, player: String) : Boolean
+
+  /**
+    * Get the set of valid words of the player.
+    * @param player
+    * @return
+    */
   def words(player: String): Set[Word]
+
+  /**
+    * Count the points gained by a player.
+    * @param player
+    * @return
+    */
   def points(player: String) : Int
+
+  /**
+    * Get the ranking of the game.
+    * @return
+    */
   def ranking() : List[(String,Int)] = players.map(player => (player, points(player))).sortWith(_._2 > _._2)
 }
 
+/**
+  * The Ruzzle Game companion object.
+  */
 object Game {
 
   def apply(players : List[String], board : Board, time : Int): Game = new BasicGame(players, board, time)

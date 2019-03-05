@@ -20,7 +20,7 @@ object Ranking {
   }
 
 
-  def getItemList(): List[(String, Int)] = rankList
+  def getItemList(): List[(String, Int)] = rankList.sortWith(_._2 > _._2).take(10)
 
   def +=(scores: (String, Int)*): Unit = {
     def writeFile(): Unit = {
