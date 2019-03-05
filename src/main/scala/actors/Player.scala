@@ -2,13 +2,12 @@ package actors
 
 import java.io.File
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Address, AddressFromURIString, PoisonPill, Props}
-import akka.remote.WireFormats.TimeUnit
+import akka.actor.{Actor, ActorRef, ActorSystem, PoisonPill, Props}
 
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import com.typesafe.config.{Config, ConfigFactory}
-import model.{Word, WordTag}
+import model.{Ranking, Word, WordTag}
 
 import scala.concurrent.duration._
 
@@ -23,7 +22,7 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
       game = Option(system.actorOf(Props(new Game(time, numberOfPlayers, useSynExtension)), "game"))
       if(game.isDefined) game.get ! JoinTheGame(name)
     case TakePartOfAnExistingGame(_, address) =>
-      context.actorSelection("akka.tcp://ruzzle@" + address + ":2600/user/game").resolveOne(1 minutes).onComplete(result => {
+      context.actorSelection("akka.tcp://ruzzle@" + address + ":2600/user/game").resolveOne(10 seconds).onComplete(result => {
         if(result.isSuccess) {
           game = Option(result.get)
           println(game.get)
@@ -42,6 +41,7 @@ class Player(val name: String, val guiActor: ActorRef) extends Actor {
       game.get ! Stop()
     case GameRanking(ranking) =>
       guiActor ! GameRanking(ranking)
+      if(ranking.length == 1) Ranking += ranking.head
       self ! PoisonPill
     case FoundWord(value, tag) => tag match {
       case "Adjective" => game.get ! WordTyped(name, Word(value, WordTag.Adjective))

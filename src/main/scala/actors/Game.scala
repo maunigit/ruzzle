@@ -15,7 +15,8 @@ class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean
       sender() ! YouAreIn()
       if(players.length == numberOfPlayers) {
         val board: Board = Board(FakeGenerator, 10)
-        game = Option(Game(players.map{case (user, _) => user}, board, time))
+        if(useSynExtension) game = Option(Game.withSinExtension(players.map{case (user, _) => user}, board, time))
+          else game = Option(Game(players.map{case (user, _) => user}, board, time))
         players.map{case (_, ref) => ref}.foreach(ref => ref ! Start(board.matrix(), time))
       }
     case WordTyped(player, word) =>
