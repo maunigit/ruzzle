@@ -35,6 +35,8 @@ class LauchDashboard extends Application {
     primaryStage.show()
   }
 
+  override def stop(): Unit = System.exit(0)
+
 }
 
 class DashboardController extends Initializable {
@@ -300,8 +302,13 @@ class DashboardController extends Initializable {
   @FXML def searchWord(event: ActionEvent): Unit = {
     val wordValue: String = inputWordTextField.getText
     val wordType: String = typeWordComboBox.getValue
-    guiActor ! FoundWord(wordValue, wordType)
-    inputWordTextField.setText("")
+    if(wordValue.isEmpty) {
+      showAlert("You must type a word!")
+    } else {
+      guiActor ! FoundWord(wordValue, wordType)
+      inputWordTextField.setText("")
+      searchedWordsListView.getItems.add(wordValue)
+    }
   }
 
   @FXML def showRank(event: ActionEvent): Unit = {
@@ -310,6 +317,7 @@ class DashboardController extends Initializable {
 
   def showDialogRank(ranking: List[(String, Int)]): Unit = {
     Platform.runLater(() => {
+      searchButton.setDisable(true)
       val alert = new Alert(AlertType.INFORMATION)
       alert.setTitle("Show Ranking")
       alert.setHeaderText("Ruzzle Ranking")
