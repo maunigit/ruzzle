@@ -3,13 +3,10 @@ package view
 import java.io.File
 import java.lang.reflect.Method
 import java.net.URL
-import java.util.regex.{Matcher, Pattern}
 import java.util.{Optional, ResourceBundle}
-
 import actors._
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.typesafe.config.{Config, ConfigFactory}
-
 import scala.collection.JavaConverters._
 import javafx.application.{Application, Platform}
 import javafx.beans.value.{ChangeListener, ObservableValue}
@@ -22,12 +19,18 @@ import javafx.scene.control.ButtonBar.ButtonData
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, VBox}
 import javafx.stage.Stage
-import javafx.scene.control.TextInputDialog
 import javafx.scene.control.cell.PropertyValueFactory
 import model.{Ranking, ScoreManager}
 
+/**
+  * The LauchDashboard class that allows to start and stop the dashboard.
+  */
 class LauchDashboard extends Application {
-
+  /**
+    * Start the application reading the file FXML and setting the primary stage
+    *
+    * @param primaryStage
+    */
   override def start(primaryStage: Stage): Unit = {
     val loaderDashboard: FXMLLoader = new FXMLLoader(getClass.getResource("/view/dashboardView.fxml"))
     val sceneDashboard = new Scene(loaderDashboard.load())
@@ -36,52 +39,50 @@ class LauchDashboard extends Application {
     primaryStage.show()
   }
 
+  /**
+    * Stop the application
+    */
   override def stop(): Unit = System.exit(0)
-
 }
 
+/**
+  * The DashboardController class that allows to control the dashboard.
+  */
 class DashboardController extends Initializable {
-
   @FXML
   var existGameMenuItem: MenuItem = _
-
   @FXML
   var matchMenuItem: MenuItem = _
-
   @FXML
   var matchMultiplayerMenuItem: MenuItem = _
-
   @FXML
   var pointsMenuItem: MenuItem = _
-
   @FXML
   var rankMenuItem: MenuItem = _
-
   @FXML
   var matrixGridPane: GridPane = _
-
   @FXML
   var inputWordTextField: TextField = _
-
   @FXML
   var searchButton: Button = _
-
   @FXML
   var resultLabel: Label = _
-
   @FXML
   var searchedWordsLabel: Label = _
-
   @FXML
   var searchedWordsListView: ListView[String] = new ListView()
-
   @FXML
   var typeWordComboBox: ComboBox[String] = new ComboBox[String]()
-
   val config: Config = ConfigFactory.parseFile(new File(getClass.getResource("/actor_configs/player_config.conf").toURI))
   val system: ActorSystem = ActorSystem.create("ruzzle", config)
   val guiActor: ActorRef = system.actorOf(Props(new GUI(this)))
 
+  /**
+    * Allows to perform any necessary post-processing on the content because provides the access to the resources that were used to load the document
+    *
+    * @param location
+    * @param resources
+    */
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
     typeWordComboBox.getItems.clear()
     typeWordComboBox.getItems.addAll("Noun", "Adjective", "Adverb", "Verb")
@@ -90,6 +91,11 @@ class DashboardController extends Initializable {
     inputWordTextField.setEditable(false)
   }
 
+  /**
+    * Draws and allows to change the scoring system used
+    *
+    * @param event
+    */
   @FXML def changePoints(event: ActionEvent): Unit = {
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Points")
@@ -116,6 +122,7 @@ class DashboardController extends Initializable {
     var vowelValue = new Label(vowelSlider.getValue().toInt.toString())
     var consonantValue = new Label(consonantSlider.getValue().toInt.toString())
     var synonymousValue = new Label(synonymousSlider.getValue().toInt.toString())
+
     val grid: GridPane = new GridPane()
     GridPane.setConstraints(nounLabel, 0, 0)
     GridPane.setConstraints(adjectiveLabel, 0, 1)
@@ -205,8 +212,13 @@ class DashboardController extends Initializable {
     alert.showAndWait()
   }
 
+  /**
+    * Draws and allows to join in a existing game
+    *
+    * @param event
+    */
   @FXML def joinExistGame(event: ActionEvent): Unit = {
-    val dialog : Dialog[(String, String)] = new Dialog()
+    val dialog: Dialog[(String, String)] = new Dialog()
     dialog.setTitle("Join a game")
     dialog.setHeaderText("Join an existing game.")
     dialog.setResizable(true)
@@ -214,28 +226,31 @@ class DashboardController extends Initializable {
     val grid: GridPane = new GridPane()
     val usernameTextField: TextField = new TextField()
     val ipTextField: TextField = new TextField()
-    var okButton : ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
+    var okButton: ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
     dialog.getDialogPane().getButtonTypes().addAll(okButton)
     grid.add(new Label("Username: "), 0, 0)
     grid.add(new Label("IP Address: "), 0, 1)
     grid.add(usernameTextField, 1, 0)
     grid.add(ipTextField, 1, 1)
     dialog.getDialogPane().setContent(grid)
-
     dialog.setResultConverter(dialogButton => {
-      if(dialogButton == okButton) (usernameTextField.getText, ipTextField.getText) else null
+      if (dialogButton == okButton) (usernameTextField.getText, ipTextField.getText) else null
     })
-
     val result: Optional[(String, String)] = dialog.showAndWait()
-    if(result.isPresent) {
+    if (result.isPresent) {
       result.get() match {
-        case (username, address) => if(username.isEmpty || address.isEmpty) showAlert("You must fill both fields!") else guiActor ! TakePartOfAnExistingGame(username, address)
+        case (username, address) => if (username.isEmpty || address.isEmpty) showAlert("You must fill both fields!") else guiActor ! TakePartOfAnExistingGame(username, address)
       }
     }
   }
 
+  /**
+    * Draws and allows to play a new match
+    *
+    * @param event
+    */
   @FXML def newGameMatch(event: ActionEvent): Unit = {
-    val dialog : Dialog[(String, Int, Boolean)] = new Dialog()
+    val dialog: Dialog[(String, Int, Boolean)] = new Dialog()
     dialog.setTitle("New Single Player Game")
     dialog.setHeaderText("Create a new single player game.")
     dialog.setResizable(true)
@@ -244,7 +259,7 @@ class DashboardController extends Initializable {
     val usernameTextField: TextField = new TextField()
     val timeField: Spinner[Int] = new Spinner[Int](1, 10, 1)
     val synExtension: CheckBox = new CheckBox("Synonym Extension")
-    var okButton : ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
+    var okButton: ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
     dialog.getDialogPane().getButtonTypes().addAll(okButton)
     grid.add(new Label("Username: "), 0, 0)
     grid.add(new Label("Time (min): "), 0, 1)
@@ -252,22 +267,24 @@ class DashboardController extends Initializable {
     grid.add(usernameTextField, 1, 0)
     grid.add(timeField, 1, 1)
     dialog.getDialogPane().setContent(grid)
-
     dialog.setResultConverter(dialogButton => {
-      if(dialogButton == okButton) (usernameTextField.getText, timeField.getValue, synExtension.isSelected) else null
+      if (dialogButton == okButton) (usernameTextField.getText, timeField.getValue, synExtension.isSelected) else null
     })
-
     val result: Optional[(String, Int, Boolean)] = dialog.showAndWait()
-    if(result.isPresent) {
+    if (result.isPresent) {
       result.get() match {
-        case (username, time, synExtension) => if(username.isEmpty) showAlert("You must insert a valid username!") else guiActor ! NewGame(username, time, 1, synExtension)
+        case (username, time, synExtension) => if (username.isEmpty) showAlert("You must insert a valid username!") else guiActor ! NewGame(username, time, 1, synExtension)
       }
     }
-
   }
 
+  /**
+    * Draws and allows to play a new multiplayer match
+    *
+    * @param event
+    */
   @FXML def newGameMatchMultiplayer(event: ActionEvent): Unit = {
-    val dialog : Dialog[(String, Int, Boolean, Int)] = new Dialog()
+    val dialog: Dialog[(String, Int, Boolean, Int)] = new Dialog()
     dialog.setTitle("New Multi Player Game")
     dialog.setHeaderText("Create a new multi player game.")
     dialog.setResizable(true)
@@ -277,7 +294,7 @@ class DashboardController extends Initializable {
     val timeField: Spinner[Int] = new Spinner[Int](1, 10, 1)
     val synExtension: CheckBox = new CheckBox("Synonym Extension")
     val playerNumber: Spinner[Int] = new Spinner[Int](2, 10, 2)
-    var okButton : ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
+    var okButton: ButtonType = new ButtonType("Ok", ButtonData.OK_DONE)
     dialog.getDialogPane().getButtonTypes().addAll(okButton)
     grid.add(new Label("Username: "), 0, 0)
     grid.add(new Label("Time (min): "), 0, 1)
@@ -287,23 +304,26 @@ class DashboardController extends Initializable {
     grid.add(timeField, 1, 1)
     grid.add(playerNumber, 1, 3)
     dialog.getDialogPane().setContent(grid)
-
     dialog.setResultConverter(dialogButton => {
-      if(dialogButton == okButton) (usernameTextField.getText, timeField.getValue, synExtension.isSelected, playerNumber.getValue) else null
+      if (dialogButton == okButton) (usernameTextField.getText, timeField.getValue, synExtension.isSelected, playerNumber.getValue) else null
     })
-
     val result: Optional[(String, Int, Boolean, Int)] = dialog.showAndWait()
-    if(result.isPresent) {
+    if (result.isPresent) {
       result.get() match {
-        case (username, time, synExtension, participants) => if(username.isEmpty) showAlert("You must insert a valid username!") else guiActor ! NewGame(username, time, participants, synExtension)
+        case (username, time, synExtension, participants) => if (username.isEmpty) showAlert("You must insert a valid username!") else guiActor ! NewGame(username, time, participants, synExtension)
       }
     }
   }
 
+  /**
+    * Checks the entered word
+    *
+    * @param event
+    */
   @FXML def searchWord(event: ActionEvent): Unit = {
     val wordValue: String = inputWordTextField.getText
     val wordType: String = typeWordComboBox.getValue
-    if(wordValue.isEmpty) {
+    if (wordValue.isEmpty) {
       showAlert("You must type a word!")
     } else {
       guiActor ! FoundWord(wordValue, wordType)
@@ -312,10 +332,20 @@ class DashboardController extends Initializable {
     }
   }
 
+  /**
+    * Shows the ranking
+    *
+    * @param event
+    */
   @FXML def showRank(event: ActionEvent): Unit = {
     showDialogRank(Ranking.getItemList())
   }
 
+  /**
+    * Creates an alert with a specific text
+    *
+    * @param text
+    */
   private def showAlert(text: String): Unit = {
     Platform.runLater(() => {
       val alert = new Alert(AlertType.INFORMATION)
@@ -326,6 +356,11 @@ class DashboardController extends Initializable {
     })
   }
 
+  /**
+    * Draws and populates the ranking
+    *
+    * @param ranking
+    */
   def showDialogRank(ranking: List[(String, Int)]): Unit = {
     Platform.runLater(() => {
       val alert = new Alert(AlertType.INFORMATION)
@@ -349,12 +384,22 @@ class DashboardController extends Initializable {
     })
   }
 
+  /**
+    * Shows the address
+    *
+    * @param address
+    */
   def showAddress(address: String): Unit = {
     Platform.runLater(() => {
       showAlert("The game is at " + address)
     })
   }
 
+  /**
+    * Inserts the board
+    *
+    * @param board
+    */
   def insertBoard(board: Array[Array[Char]]): Unit = {
     Platform.runLater(() => {
       resultLabel.setText("Go ...")
@@ -366,6 +411,9 @@ class DashboardController extends Initializable {
     })
   }
 
+  /**
+    * Sets the scene for a new match
+    */
   def gameFinished(): Unit = {
     Platform.runLater(() => {
       searchButton.setDisable(true)
@@ -376,6 +424,9 @@ class DashboardController extends Initializable {
     })
   }
 
+  /**
+    * Sets the scene for a new match if an error occurs
+    */
   def gameBroken(): Unit = {
     Platform.runLater(() => {
       showAlert("The Game has been deleted or it no longer responds...")
@@ -387,24 +438,34 @@ class DashboardController extends Initializable {
     })
   }
 
+  /**
+    * Creates an empty board
+    */
   def emptyBoard(): Unit = {
     def getNumberOfRows(gridPane: GridPane): Int = {
       val method: Method = gridPane.getClass.getDeclaredMethod("getNumberOfRows")
       method.setAccessible(true)
       method.invoke(gridPane).asInstanceOf[Int]
     }
+
     Platform.runLater(() => {
       matrixGridPane.getChildren().clear()
       for (i <- 0 to getNumberOfRows(matrixGridPane); j <- 0 to getNumberOfRows(matrixGridPane)) matrixGridPane.add(new Label(" "), i, j)
     })
   }
 
+  /**
+    * Shows alert for wrong address
+    */
   def wrongAddress(): Unit = {
     Platform.runLater(() => {
       showAlert("The inserted address is wrong...")
     })
   }
 
+  /**
+    * Shows alert for joined the game
+    */
   def youAreInTheGame(): Unit = {
     Platform.runLater(() => {
       showAlert("Well Done! You have joined the game!")
@@ -412,18 +473,27 @@ class DashboardController extends Initializable {
     })
   }
 
+  /**
+    * Warns the word entered is good
+    */
   def warnForAGoodWord(): Unit = {
     Platform.runLater(() => {
       resultLabel.setText("Good Word!")
     })
   }
 
+  /**
+    * Warns the word entered is wrong
+    */
   def warnForABadWord(): Unit = {
     Platform.runLater(() => {
       resultLabel.setText("Wrong...")
     })
   }
 
+  /**
+    * Warns another game is already running
+    */
   def warnForAnExistingGame(): Unit = {
     Platform.runLater(() => {
       showAlert("Another game is already running...")
