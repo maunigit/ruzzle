@@ -16,80 +16,113 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashboardController">
-   <children>
-      <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashboardController">
+    <children>
+        <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem fx:id="matchMenuItem" mnemonicParsing="false" onAction="#newGameMatch"
+                                  text="New Match"/>
+                        <MenuItem fx:id="matchMultiplayerMenuItem" mnemonicParsing="false"
+                                  onAction="#newGameMatchMultiplayer" text="New Multiplayer Match"/>
+                        <MenuItem fx:id="existGameMenuItem" mnemonicParsing="false" onAction="#joinExistGame"
+                                  text="Join An Existing Game"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem fx:id="pointsMenuItem" mnemonicParsing="false" onAction="#changePoints"
+                                  text="Change Points"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="View">
+                    <items>
+                        <MenuItem fx:id="rankMenuItem" mnemonicParsing="false" onAction="#showRank"
+                                  text="Show Ranking"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <SplitPane dividerPositions="0.8" layoutX="50.0" layoutY="53.0" prefHeight="160.0" prefWidth="200.0"
+                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                   AnchorPane.topAnchor="25.0">
             <items>
-                  <MenuItem fx:id="matchMenuItem" mnemonicParsing="false" onAction="#newGameMatch" text="New Match" />
-                  <MenuItem fx:id="matchMultiplayerMenuItem" mnemonicParsing="false" onAction="#newGameMatchMultiplayer" text="New Multiplayer Match" />
-                  <MenuItem fx:id="existGameMenuItem" mnemonicParsing="false" onAction="#joinExistGame" text="Join An Existing Game" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                    <children>
+                        <GridPane fx:id="matrixGridPane" gridLinesVisible="true" layoutY="-2.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                  AnchorPane.topAnchor="-2.0">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                        </GridPane>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                    <children>
+                        <TextField fx:id="inputWordTextField" alignment="CENTER" layoutY="2.0" prefHeight="30.0"
+                                   prefWidth="117.0" promptText="Word to find" AnchorPane.leftAnchor="0.0"
+                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                        <ComboBox fx:id="typeWordComboBox" layoutY="30.0" nodeOrientation="LEFT_TO_RIGHT"
+                                  prefHeight="30.0" visibleRowCount="4" AnchorPane.leftAnchor="0.0"
+                                  AnchorPane.rightAnchor="0.0">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Noun"/>
+                                    <String fx:value="Adjective"/>
+                                    <String fx:value="Adverb"/>
+                                    <String fx:value="Verb"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Button fx:id="searchButton" layoutY="60.0" mnemonicParsing="false" onAction="#searchWord"
+                                prefHeight="30.0" prefWidth="117.0" text="Go" textAlignment="CENTER" underline="true"
+                                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+                        <Label fx:id="resultLabel" alignment="CENTER" layoutY="90.0" prefHeight="50.0" prefWidth="117.0"
+                               text="Ready To Play!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0"
+                               AnchorPane.rightAnchor="0.0"/>
+                        <Label fx:id="searchedWordsLabel" alignment="CENTER" layoutY="140.0" prefHeight="25.0"
+                               text="Last searched words" textAlignment="CENTER" AnchorPane.leftAnchor="0.0"
+                               AnchorPane.rightAnchor="0.0"/>
+                        <ListView fx:id="searchedWordsListView" layoutY="168.0" prefHeight="205.0" prefWidth="117.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                  AnchorPane.topAnchor="168.0"/>
+                    </children>
+                </AnchorPane>
             </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-              <items>
-                <MenuItem fx:id="pointsMenuItem" mnemonicParsing="false" onAction="#changePoints" text="Change Points" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="View">
-              <items>
-                <MenuItem fx:id="rankMenuItem" mnemonicParsing="false" onAction="#showRank" text="Show Ranking" />
-              </items>
-            </Menu>
-        </menus>
-      </MenuBar>
-      <SplitPane dividerPositions="0.8" layoutX="50.0" layoutY="53.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-               <children>
-                  <GridPane fx:id="matrixGridPane" gridLinesVisible="true" layoutY="-2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
-                    <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                  </GridPane>
-               </children></AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-               <children>
-                  <TextField fx:id="inputWordTextField" alignment="CENTER" layoutY="2.0" prefHeight="30.0" prefWidth="117.0" promptText="Word to find" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <ComboBox fx:id="typeWordComboBox" layoutY="30.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" visibleRowCount="4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                   <items>
-                       <FXCollections fx:factory="observableArrayList">
-                           <String fx:value="Noun" />
-                           <String fx:value="Adjective" />
-                           <String fx:value="Adverb" />
-                           <String fx:value="Verb" />
-                       </FXCollections>
-                   </items>
-                  </ComboBox>
-                  <Button fx:id="searchButton" layoutY="60.0" mnemonicParsing="false" onAction="#searchWord" prefHeight="30.0" prefWidth="117.0" text="Go" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Label fx:id="resultLabel" alignment="CENTER" layoutY="90.0" prefHeight="50.0" prefWidth="117.0" text="Ready To Play!" textAlignment="JUSTIFY" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Label fx:id="searchedWordsLabel" alignment="CENTER" layoutY="140.0" prefHeight="25.0" text="Last searched words" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <ListView fx:id="searchedWordsListView" layoutY="168.0" prefHeight="205.0" prefWidth="117.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="168.0" />
-               </children>
-            </AnchorPane>
-        </items>
-      </SplitPane>
-   </children>
+        </SplitPane>
+    </children>
 </AnchorPane>
