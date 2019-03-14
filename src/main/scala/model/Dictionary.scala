@@ -1,5 +1,6 @@
 package model
 
+import java.io.File
 import java.net.URL
 
 import scala.collection.JavaConverters._
