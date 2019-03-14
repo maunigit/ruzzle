@@ -1,7 +1,8 @@
 package actors
 
 import akka.actor.{Actor, ActorRef, PoisonPill}
-import model.{Board, FakeGenerator, Game}
+import model.{Board, FakeGenerator, Game, RandomGenerator}
+
 import scala.concurrent.duration._
 import scala.concurrent._
 import ExecutionContext.Implicits.global
@@ -24,7 +25,7 @@ class Game(val time: Int, val numberOfPlayers: Int, val useSynExtension: Boolean
       players = players :+ (player, sender())
       sender() ! YouAreIn()
       if(players.length == numberOfPlayers) {
-        val board: Board = Board(FakeGenerator, 10)
+        val board: Board = Board(RandomGenerator, 10)
         if(useSynExtension) game = Option(Game.withSinExtension(players.map{case (user, _) => user}, board, time))
           else game = Option(Game(players.map{case (user, _) => user}, board, time))
         players.map{case (_, ref) => ref}.foreach(ref => ref ! Start(board.matrix(), time))
