@@ -32,7 +32,7 @@ class LauchDashboard extends Application {
     * @param primaryStage
     */
   override def start(primaryStage: Stage): Unit = {
-    val loaderDashboard: FXMLLoader = new FXMLLoader(getClass.getResource("/view/dashboardView.fxml"))
+    val loaderDashboard: FXMLLoader = new FXMLLoader(getClass.getResource("/dashboardView.fxml"))
     val sceneDashboard = new Scene(loaderDashboard.load())
     primaryStage.setTitle("Ruzzle")
     primaryStage.setScene(sceneDashboard)
